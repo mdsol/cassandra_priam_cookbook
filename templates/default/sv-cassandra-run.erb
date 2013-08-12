@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+cd <%= @options[:home] %>
+exec 2>&1
+exec chpst -u cassandra -e /etc/sv/cassandra/env ./bin/cassandra -f
