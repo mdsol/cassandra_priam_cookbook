@@ -1,20 +1,3 @@
-# We need to rework these vars
-HOME      = node[:cassandra][:home]
-DATA_DIR  = node[:cassandra][:data_dir]
-LOG_DIR   = node[:cassandra][:log_dir]
-CLUSTER   = node[:cassandra][:cluster] || (
-              node[:mdsol][:project] && node[:mdsol][:environment] ?
-                "#{node[:mdsol][:project]}-#{node[:mdsol][:environment]}" :
-                'Test Cluster')
-
-# here are the variables for all the templates
-TEMPLATE_VARS = {
-  :home               => HOME,
-  :data_dir           => DATA_DIR,
-  :log_dir            => LOG_DIR,
-  :cluster_name       => CLUSTER,
-}
-
 # setup java
 # this should be replaced with the java cookbook
 include_recipe "priam-cassandra::oraclejava6"
@@ -38,4 +21,4 @@ include_recipe "priam-cassandra::simpledbconfig"
 include_recipe "priam-cassandra::optimizations"
 
 # startup
-include_recipe "priam-cassandra::startup"
+#include_recipe "priam-cassandra::startup"

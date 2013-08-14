@@ -1,10 +1,8 @@
 chef_gem 'fog'
-chef_gem 'pp'
 
 ruby_block "set-SimpleDB-Properties" do
   block do
       require 'fog'
-      require 'pp'
 
       keys = Hash[File.read("/etc/awscredential.properties").split.map{|e| e.split("=") }]
       sdb = Fog::AWS::SimpleDB.new(:aws_access_key_id => keys["AWSACCESSID"], :aws_secret_access_key => keys["AWSKEY"])
@@ -27,10 +25,8 @@ ruby_block "set-SimpleDB-Properties" do
 
       #PriamProperties = []
       #PriamProperties = sdb.select("select * from PriamProperties where appId='#{node['cassandra']['priam_clustername']}'")
-      #pp PriamProperties
       #InstanceIdentity = []
       #InstanceIdentity = sdb.select("select * from InstanceIdentity")
-      #pp InstanceIdentity
   end
   action :create
 end

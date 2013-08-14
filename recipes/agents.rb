@@ -7,9 +7,9 @@ bash "Setup Agent in Cassandra Include File" do
   user node[:cassandra][:user]
   cwd "/"
   code <<-EOH
-  cp #{node[:cassandra][:priam_cass_home]/bin/cassandra.in.sh /tmp
+  cp #{node[:cassandra][:priam_cass_home]}/bin/cassandra.in.sh /tmp
   echo "export JVM_OPTS=\"-javaagent:\$CASSANDRA_HOME/lib/priam-cass-extensions-#{node[:cassandra][:priam_version]}.jar\"" >> /tmp/cassandra.in.sh
-  cp /tmp/cassandra.in.sh  #{node[:cassandra][:priam_cass_home]/
+  cp /tmp/cassandra.in.sh  #{node[:cassandra][:priam_cass_home]}/
   EOH
 end
 

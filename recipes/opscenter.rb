@@ -1,13 +1,6 @@
 # required for IO stat reporting
 package "sysstat"
 
-directory OPS_HOME do
-  owner     "#{node[:cassandra][:user]}"
-  group     "#{node[:cassandra][:user]}"
-  mode      0770
-  recursive true
-end
-
 # download source
 src_url = node[:cassandra][:opscenter][:src_url]
 local_archive = "/usr/local/src/#{::File.basename src_url}"
@@ -18,7 +11,7 @@ remote_file local_archive do
   checksum node[:cassandra][:opscenter][:checksum]
 end
 
-VERSON_DIR = "#{node[:cassandra][:opscenter_home]}-#{node[:cassandra][:opscenter][:version]}"
+VERSION_DIR = "#{node[:cassandra][:opscenter_home]}-#{node[:cassandra][:opscenter][:version]}"
 
 # create the target directory
 directory VERSION_DIR do

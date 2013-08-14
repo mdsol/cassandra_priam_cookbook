@@ -13,7 +13,7 @@ end
 
 # Priam's War
 src_url = node[:cassandra][:priam_web_war][:src_url]
-local_archive = "#{node[:tomcat7][:webappsroot]}/Priam.war"
+local_archive = "#{node[:tomcat][:webappsroot]}/Priam.war"
 remote_file local_archive do
   source  src_url
   mode    0644

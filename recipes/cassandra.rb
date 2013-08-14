@@ -6,10 +6,10 @@ user "#{node[:cassandra][:user]}" do
 end
 
 # Create the Data/Cache/Commitlog Directories
-{ node[:cassandra][:priam_data_location],
+[ node[:cassandra][:priam_data_location],
   node[:cassandra][:priam_cache_location],
   node[:cassandra][:priam_commitlog_location] 
-}.each do |dir|
+].each do |dir|
   directory dir do
     owner     "#{node[:cassandra][:user]}"
     group     "#{node[:cassandra][:user]}"
@@ -28,7 +28,7 @@ remote_file local_archive do
   checksum node[:cassandra][:checksum]
 end
 
-VERSON_DIR = "#{node[:cassandra][:parentdir]}/#{node[:cassandra][:nameprefix]}-#{node[:cassandra][:version]}"
+VERSION_DIR = "#{node[:cassandra][:parentdir]}/#{node[:cassandra][:nameprefix]}-#{node[:cassandra][:version]}"
 
 # create the target directory
 directory VERSION_DIR do
@@ -54,9 +54,9 @@ link node[:cassandra][:priam_cass_home] do
   group     "#{node[:cassandra][:user]}"
 end
 
-# give priam running as node[:tomcat7][:user] access to write the config
+# give priam running as node[:tomcat][:user] access to write the config
 file "#{node[:cassandra][:priam_cass_home]}/conf/cassandra.yaml" do
-  owner     "#{node[:tomcat7][:user]}"
+  owner     "#{node[:tomcat][:user]}"
   group     "#{node[:cassandra][:user]}"
   mode      "0755"
   action    :touch
@@ -73,7 +73,6 @@ include_recipe "runit"
 # This needs to be reworked.
 runit_service "cassandra" do
   supports  :restart => false
-  options   TEMPLATE_VARS
   env({ 'HOME' => node[:cassandra][:priam_cass_home] })
 end
 
