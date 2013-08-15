@@ -54,14 +54,6 @@ link node[:cassandra][:priam_cass_home] do
   group     "#{node[:cassandra][:user]}"
 end
 
-# give priam running as node[:tomcat][:user] access to write the config
-file "#{node[:cassandra][:priam_cass_home]}/conf/cassandra.yaml" do
-  owner     "#{node[:tomcat][:user]}"
-  group     "#{node[:cassandra][:user]}"
-  mode      "0755"
-  action    :touch
-end
-
 # link in Java Native interface, if found
 link "#{node[:cassandra][:priam_cass_home]}/lib/jna.jar" do
   to "/usr/share/java/jna.jar"

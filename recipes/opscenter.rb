@@ -1,6 +1,9 @@
 # required for IO stat reporting
 package "sysstat"
 
+# required for opscenter to run
+package "libssl0.9.8"
+
 # download source
 src_url = node[:cassandra][:opscenter][:src_url]
 local_archive = "/usr/local/src/#{::File.basename src_url}"

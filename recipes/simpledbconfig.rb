@@ -1,4 +1,15 @@
-chef_gem 'fog'
+xsltdev = package "libxslt-dev" do
+   action :nothing
+end
+
+xmldev = package "libxml2-dev" do
+   action :nothing
+end
+
+xsltdev.run_action(:install)
+xmldev.run_action(:install)
+
+chef_gem "fog"
 
 ruby_block "set-SimpleDB-Properties" do
   block do

@@ -1,3 +1,18 @@
+# Various Install attributes
+default[:cassandra][:aws][:access_key_id] = nil
+default[:cassandra][:aws][:secret_access_key] = nil
+default[:cassandra][:user] = "cassandra"
+default[:cassandra][:log_dir] = "/var/log/cassandra" # where it this set or used ?
+# datastax cassandra comes prefixed dsc-cassandra - modify as necessary for your needs
+default[:cassandra][:nameprefix] = "dsc-cassandra"
+default[:cassandra][:parentdir] = "/opt"
+default[:cassandra][:opscenter_home] = "#{node[:cassandra][:parentdir]}/opscenter"
+
+# Tomcat defaults for Ubuntu - these are needed by Priam
+default[:tomcat][:webappsroot] = "/var/lib/tomcat7/webapps"
+default[:tomcat][:packagename] = "tomcat7"
+default[:tomcat][:user] = "tomcat7"
+
 # These will be fed into SimpleDB for Priam's Configuration which in turn generates Cassandra's configuration
 # priam_clustername MUST match the autoscaling group name in order to be used
 # priam_clustername is effectively the reference to the correct set of SimpleDB Configuration
@@ -10,21 +25,6 @@ default[:cassandra][:priam_cache_location] = "/mnt/cassandra/saved_caches"
 default[:cassandra][:priam_commitlog_location] = "/mnt/cassandra/commitlog"
 default[:cassandra][:priam_cass_startscript] = "/etc/init.d/cassandra start"
 default[:cassandra][:priam_cass_stopscript] = "/etc/init.d/cassandra stop"
-
-# Other attributes
-default[:cassandra][:aws][:access_key_id] = nil
-default[:cassandra][:aws][:secret_access_key] = nil
-default[:cassandra][:user] = "cassandra"
-default[:cassandra][:log_dir] = "/var/log/cassandra" # where it this set ?
-default[:cassandra][:opscenter_home] = "#{node[:cassandra][:parentdir]}/opscenter"
-# datastax cassandra comes prefixed dsc-cassandra - modify as necessary for your needs
-default[:cassandra][:nameprefix] = "dsc-cassandra"
-default[:cassandra][:parentdir] = "/opt"
-
-# Tomcat defaults for Ubuntu - these are needed by Priam
-default[:tomcat][:webappsroot] = "/var/lib/tomcat7/webapps"
-default[:tomcat][:packagename] = "tomcat7"
-default[:tomcat][:user] = "tomcat7"
 
 # This cookbooks requires a LOT of software to be stored in an http server.
 # Source files are in a Medidata-controlled S3 bucket with open http auth
