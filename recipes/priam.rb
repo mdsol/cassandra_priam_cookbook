@@ -11,10 +11,10 @@ end
 # Sudo entry to manage cassandra startup/shutdown via Priam
 template "/etc/sudoers.d/tomcat" do
   source "tomcatsudo.erb"
-  mode    0600
+  mode    0440
 end
 
-# Priam's War
+# Priam's War file goes into tomcat's special directory
 src_url = node[:cassandra][:priam_web_war][:src_url]
 local_archive = "#{node[:tomcat][:webappsroot]}/Priam.war"
 remote_file local_archive do
@@ -34,7 +34,7 @@ remote_file local_archive do
   checksum node[:cassandra][:priam_cass_extensions_jar][:checksum]
 end
 
-# give priam running as node[:tomcat][:user] access to write the config
+# Give priam running as node[:tomcat][:user] access to write the config
 file "#{node[:cassandra][:priam_cass_home]}/conf/cassandra.yaml" do
   owner     "#{node[:tomcat][:user]}"
   group     "#{node[:cassandra][:user]}"
@@ -46,7 +46,6 @@ end
 # concatenate the Priam agent onto the end of the file
 # copy the file where it will be picked up
 # sadly doing this a chef-way is too bothersome compared to shellscript
-
 bash "Setup Agent in Cassandra Include File" do
   user node[:cassandra][:user]
   cwd "/"
@@ -56,3 +55,4 @@ bash "Setup Agent in Cassandra Include File" do
   cp /tmp/cassandra.in.sh  #{node[:cassandra][:priam_cass_home]}/
   EOH
 end
+

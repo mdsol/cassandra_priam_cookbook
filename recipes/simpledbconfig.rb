@@ -9,7 +9,9 @@ end
 xsltdev.run_action(:install)
 xmldev.run_action(:install)
 
-chef_gem "fog"
+chef_gem "fog" do
+  version  "1.9.0"
+end
 
 ruby_block "set-SimpleDB-Properties" do
   block do
