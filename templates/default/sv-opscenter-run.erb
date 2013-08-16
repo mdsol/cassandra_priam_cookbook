@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-cd <%= @options[:home] %>
+cd <%= node[:cassandra][:opscenter_home] %>
 exec 2>&1
 exec chpst -u cassandra ./bin/opscenter

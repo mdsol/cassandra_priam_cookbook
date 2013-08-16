@@ -1,11 +1,16 @@
+buildessential = package "build-essential" do
+  action:nothing
+end
+
 xsltdev = package "libxslt-dev" do
-   action :nothing
+  action :nothing
 end
 
 xmldev = package "libxml2-dev" do
-   action :nothing
+  action :nothing
 end
 
+buildessential.run_action(:install)
 xsltdev.run_action(:install)
 xmldev.run_action(:install)
 
@@ -36,10 +41,6 @@ ruby_block "set-SimpleDB-Properties" do
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.cass.startscript", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.cass.startscript", "value" => "#{node['cassandra']['priam_cass_startscript']}"})
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.cass.stopscript", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.cass.stopscript", "value" => "#{node['cassandra']['priam_cass_stopscript']}"})
 
-      #PriamProperties = []
-      #PriamProperties = sdb.select("select * from PriamProperties where appId='#{node['cassandra']['priam_clustername']}'")
-      #InstanceIdentity = []
-      #InstanceIdentity = sdb.select("select * from InstanceIdentity")
   end
   action :create
 end

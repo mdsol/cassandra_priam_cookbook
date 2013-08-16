@@ -49,21 +49,3 @@ default[:cassandra][:priam_cass_extensions_jar][:checksum] = "e0c577b6763829640a
 include_attribute "nginx_proxy"
 default[:nginx_proxy][:http_port] = 8888
 default[:nginx_proxy][:https_port] = 8888
-
-#### CUTOFF: attributes to be removed I expect or shunted to SDBt
-
-# Cassandra Snitch
-# Use Ec2MultiRegionSnitch for multi-region deployments,
-default[:cassandra][:snitch] = 'Ec2Snitch'
-
-# Seed hosts
-# If this Array attribute is empty, Chef will search for other Cassandra
-# nodes with the same cluster name, and use their seed host list.
-# Failing that, the node will list itself as a seed
-default[:cassandra][:seeds] = Array.new
-# The number of seed nodes required before the cluster starts
-# Set this to 1 for a standalone cluster
-default[:cassandra][:required_seeds] = 2
-
-# (Used for state - do not manipulate directly)
-default[:cassandra][:trusted_peers] = Array.new

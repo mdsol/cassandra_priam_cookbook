@@ -5,10 +5,11 @@ user "#{node[:cassandra][:user]}" do
   shell     "/bin/sh"
 end
 
-# Create the Data/Cache/Commitlog Directories
+# Create the Data/Cache/Commitlog/Log Directories
 [ node[:cassandra][:priam_data_location],
   node[:cassandra][:priam_cache_location],
-  node[:cassandra][:priam_commitlog_location] 
+  node[:cassandra][:priam_commitlog_location],
+  node[:cassandra][:log_dir]  
 ].each do |dir|
   directory dir do
     owner     "#{node[:cassandra][:user]}"
@@ -38,7 +39,7 @@ directory VERSION_DIR do
   recursive true
 end
 
-# unpack to a versioned directory first
+# unpack to the versioned directory first
 execute "unpack #{local_archive}" do
   command   "tar --strip-components 1 --no-same-owner -xzf #{local_archive}"
   creates   "#{VERSION_DIR}/bin/cassandra"
