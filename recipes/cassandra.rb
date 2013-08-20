@@ -61,11 +61,3 @@ link "#{node[:cassandra][:priam_cass_home]}/lib/jna.jar" do
   only_if { ::File.exists? "/usr/share/java/jna.jar" }
 end
 
-include_recipe "runit"
-
-# This needs to be reworked.
-runit_service "cassandra" do
-  supports  :restart => false
-  env({ 'HOME' => node[:cassandra][:priam_cass_home] })
-end
-

@@ -11,11 +11,9 @@ include_recipe "priam-cassandra::cassandra"
 # install priam cluster management
 include_recipe "priam-cassandra::priam"
 
+# runit installation and cassandra startup
+include_recipe "priam-cassandra::runit"
+
 # install opscenter cluster monitoring
 include_recipe "priam-cassandra::opscenter"
 
-# setup Priam/Cassandra configuration in Amazon SDB
-include_recipe "priam-cassandra::simpledbconfig"
-
-# startup
-#include_recipe "priam-cassandra::startup"

@@ -3,28 +3,10 @@ package node[:tomcat][:packagename] do
   action :install
 end
 
-# AWS credentials for Priam
-template "/etc/awscredential.properties" do
-  source "awscredential.properties.erb"
-  owner     "#{node[:tomcat][:user]}"
-  group     "#{node[:cassandra][:user]}"
-  mode      "0640"
-end
-
 # Sudo entry to manage cassandra startup/shutdown via Priam
 template "/etc/sudoers.d/tomcat" do
   source "tomcatsudo.erb"
   mode    0440
-end
-
-# Priam's War file goes into tomcat's special directory
-src_url = node[:cassandra][:priam_web_war][:src_url]
-local_archive = "#{node[:tomcat][:webappsroot]}/Priam.war"
-remote_file local_archive do
-  source  src_url
-  mode    0644
-  not_if  { File.exists? local_archive }
-  checksum node[:cassandra][:priam_web_war][:checksum]
 end
 
 # Priam's agent jar 
@@ -55,7 +37,32 @@ bash "Setup Agent in Cassandra Include File" do
   code <<-EOH
   cp #{node[:cassandra][:priam_cass_home]}/bin/cassandra.in.sh /tmp
   echo "export JVM_OPTS=\"-javaagent:\\$CASSANDRA_HOME/lib/priam-cass-extensions-#{node[:cassandra][:priam_version]}.jar\"" >> /tmp/cassandra.in.sh
-  cp /tmp/cassandra.in.sh  #{node[:cassandra][:priam_cass_home]}/
+  cp /tmp/cassandra.in.sh #{node[:cassandra][:priam_cass_home]}/
+  EOH
+  not_if "grep #{node[:cassandra][:priam_version]} #{node[:cassandra][:priam_cass_home]}/cassandra.in.sh"
+end
+
+# aws credentials
+include_recipe "priam-cassandra::awscredentials"
+
+# setup Priam/Cassandra configuration in Amazon SDB
+include_recipe "priam-cassandra::simpledbconfig"
+
+# Priam's War file goes into tomcat's special directory - this event causes Priam to start running.
+src_url = node[:cassandra][:priam_web_war][:src_url]
+local_archive = "#{node[:tomcat][:webappsroot]}/Priam.war"
+remote_file local_archive do
+  source  src_url
+  mode    0644
+  not_if  { File.exists? local_archive }
+  checksum node[:cassandra][:priam_web_war][:checksum]
+end
+
+# A small delay for Priam to start up / write the cassandra.yaml before running anything else
+bash "Small Delay" do
+  code <<-EOH
+  sleep 5
   EOH
 end
+
 
