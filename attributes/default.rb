@@ -39,11 +39,11 @@ default[:cassandra][:checksum] = "f372c380a2639607580f2f14a393c54cc979bfbf630199
 default[:cassandra][:opscenter][:version] = "3.2.0"
 default[:cassandra][:opscenter][:src_url] = "#{SRC}/opscenter-#{node['cassandra']['opscenter']['version']}-free.tar.gz"
 default[:cassandra][:opscenter][:checksum] = "64d38d7e0060895993f70428468178b09d498e7531ab0d32f2a7547761a959bd"
-default[:cassandra][:priam_version] = "1.2.14-SNAPSHOT"
+default[:cassandra][:priam_version] = "1.2.17"
 default[:cassandra][:priam_web_war][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-web-#{node['cassandra']['priam_version']}.war"
-default[:cassandra][:priam_web_war][:checksum] = "fe335743c290e965b3dee7b53f21bf5cd6495b9e1e27ce1dfbb52fced87b242f"
+default[:cassandra][:priam_web_war][:checksum] = "fbc1779f9cff9a8e3a4933000a9f2784c2037519f0e1f2777ae39dfee9d831a0"
 default[:cassandra][:priam_cass_extensions_jar][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-cass-extensions-#{node['cassandra']['priam_version']}.jar"
-default[:cassandra][:priam_cass_extensions_jar][:checksum] = "e0c577b6763829640a11a162a29756dfbbf9c0073f7235c0d18531b837bf6361"
+default[:cassandra][:priam_cass_extensions_jar][:checksum] = "f5cbee81dd885d07c5e3aff9b45de5a8cf9674eecc4a8af0bcd736a9c86afdab"
 
 # For DataStax OpsCenter
 include_attribute "nginx_proxy"
