@@ -2,6 +2,7 @@
 user "#{node[:cassandra][:user]}" do
   system    true
   home      node[:cassandra][:priam_cass_home]
+  gid       node[:tomcat][:user]
   shell     "/bin/sh"
 end
 
@@ -13,7 +14,7 @@ end
 ].each do |dir|
   directory dir do
     owner     "#{node[:cassandra][:user]}"
-    group     "#{node[:cassandra][:user]}"
+    group     "#{node[:tomcat][:user]}"
     mode      0770
     recursive true
   end
