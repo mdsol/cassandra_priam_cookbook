@@ -19,7 +19,7 @@ VERSION_DIR = "#{node[:cassandra][:opscenter_home]}-#{node[:cassandra][:opscente
 # create the target directory
 directory VERSION_DIR do
   owner     "#{node[:cassandra][:user]}"
-  group     "#{node[:cassandra][:user]}"
+  group     "#{node[:tomcat][:user]}"
   mode      0775
   recursive true
 end
@@ -29,7 +29,7 @@ execute "unpack #{local_archive}" do
   command   "tar --strip-components 1 --no-same-owner -xzf #{local_archive}"
   creates   "#{VERSION_DIR}/bin/opscenter"
   user      "#{node[:cassandra][:user]}"
-  group     "#{node[:cassandra][:user]}"
+  group     "#{node[:tomcat][:user]}"
   cwd       VERSION_DIR
 end
 
@@ -37,7 +37,7 @@ end
 link node[:cassandra][:opscenter_home] do
   to        VERSION_DIR
   owner     "#{node[:cassandra][:user]}"
-  group     "#{node[:cassandra][:user]}"
+  group     "#{node[:tomcat][:user]}"
 end
 
 
@@ -51,7 +51,7 @@ execute "Start Datastax OpsCenter" do
   command   "#{node[:cassandra][:opscenter_home]}/bin/opscenter"
   not_if    "ps -ef | grep twistd | grep -v grep"
   user      "#{node[:cassandra][:user]}"
-  group     "#{node[:cassandra][:user]}"
+  group     "#{node[:tomcat][:user]}"
   cwd       node[:cassandra][:opscenter_home]
 end
 

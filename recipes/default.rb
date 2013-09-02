@@ -5,6 +5,9 @@ include_recipe "priam-cassandra::oraclejava6"
 # setup up performance optimizations
 include_recipe "priam-cassandra::optimizations"
 
+# install tomcat
+include_recipe "priam-cassandra::tomcat"
+
 # install cassandra database server
 include_recipe "priam-cassandra::cassandra"
 

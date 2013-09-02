@@ -1,8 +1,3 @@
-# Priam runs in Tomcat
-package node[:tomcat][:packagename] do
-  action :install
-end
-
 # Sudo entry to manage cassandra startup/shutdown via Priam
 template "/etc/sudoers.d/tomcat" do
   source "tomcatsudo.erb"
@@ -22,7 +17,7 @@ end
 # Give priam running as node[:tomcat][:user] access to write the config
 file "#{node[:cassandra][:priam_cass_home]}/conf/cassandra.yaml" do
   owner     "#{node[:tomcat][:user]}"
-  group     "#{node[:cassandra][:user]}"
+  group     "#{node[:tomcat][:user]}"
   mode      "0755"
   action    :touch
 end
