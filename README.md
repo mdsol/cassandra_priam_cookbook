@@ -1,7 +1,7 @@
 Description
 ===========
 
-This cookbook exists to achieve a deployment of a Priam [1] Managed Cassandra [2] Cluster Deployment.
+This cookbook exists to achieve a deployment of a Priam [1] Managed Cassandra [2] Cluster.
 
 This cookbook creates the necessary SimpleDB databases [3] to manage the deployment along with some Priam/Cassandra configuration properties [4] managed via chef attributes.
 
@@ -9,9 +9,10 @@ This cookbook also includes Datastax OpsCentre [2] which provides a monitoring d
 
 This cookbook installs an Oracle JRE and the JNA package.
 
-Special Notes: This cookbook and the software it deploys are only designed to work under AWS with Autoscaling Groups.
+Special Notes: This cookbook and the software it deploys are only designed to work under AWS EC2 with Autoscaling and SimpleDB.
+               You should check that the credentials you provide have the necessary accesss to use the relevant AWS services.
 
-See [Priam][1] for more details.
+See [Priam][1] for a descriptiong of the software.
 
 [1]: https://github.com/Netflix/Priam
 [2]: http://planetcassandra.org/Download/DataStaxCommunityEdition
@@ -32,15 +33,26 @@ Amazon SimpleDB
 Attributes
 ==========
 
+See the contents of attributes/default.rb
 
 Recipes
 =======
-TODO: List recipes and their usage here.
 
+awscredentials.rb
+cassandra.rb
+default.rb
+opscenter.rb
+optimizations.rb
+oraclejava6.rb
+priam.rb
+runit.rb
+simpledbconfig.rb
+tomcat.rb
 
 Usage
 =====
-TODO: List usage examples here.
+
+To deploy Priam-driven Cassandra Clusters
 
 Development
 ===========
