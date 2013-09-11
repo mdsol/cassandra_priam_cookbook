@@ -40,6 +40,7 @@ ruby_block "set-SimpleDB-Properties" do
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.cass.home", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.cass.home", "value" => "#{node['cassandra']['priam_cass_home']}"})
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.cass.startscript", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.cass.startscript", "value" => "#{node['cassandra']['priam_cass_startscript']}"})
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.cass.stopscript", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.cass.stopscript", "value" => "#{node['cassandra']['priam_cass_stopscript']}"})
+      sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.upload.throttle", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.upload.throttle", "value" => "#{node['cassandra']['priam_upload_throttle']}"})
 
   end
   action :create

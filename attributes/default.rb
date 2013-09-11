@@ -25,6 +25,7 @@ default[:cassandra][:priam_cache_location] = "/mnt/cassandra/saved_caches"
 default[:cassandra][:priam_commitlog_location] = "/mnt/cassandra/commitlog"
 default[:cassandra][:priam_cass_startscript] = "/etc/init.d/cassandra start"
 default[:cassandra][:priam_cass_stopscript] = "/etc/init.d/cassandra stop"
+default[:cassandra][:priam_upload_throttle] = "5"
 
 # This cookbooks requires a LOT of software to be stored in an http server.
 # Source files are in a Medidata-controlled S3 bucket with open http auth
