@@ -1,62 +1,42 @@
 # required for IO stat reporting
 package "sysstat"
 
-# required for opscenter to run
+# required for opscenter agent connectivity
 package "libssl0.9.8"
 
-# download source
-src_url = node[:cassandra][:opscenter][:src_url]
-local_archive = "/usr/local/src/#{::File.basename src_url}"
-remote_file local_archive do
-  source  src_url
-  mode    0644
-  not_if  { File.exists? local_archive }
-  checksum node[:cassandra][:opscenter][:checksum]
+# am I first in fleet ?
+# i.e. node with the lowest ip
+# this assumes a single role
+
+#priam_cassandra_barrier "opscenter_on_#{node[:roles].first}"
+
+# this does not mean this node will show up in a search yet, however.
+log "LeaderElection: Roles : #{node[:roles].first}"
+
+# This search returns all other nodes sharing the unique? role
+peers = search(:node, "roles:#{node[:roles].first}" )
+
+leader = peers.sort{|a,b| a.name <=> b.name}.first
+followers = peers.reject{|p| p.name == leader.name}
+
+peershostnames = peers.collect {|n| n[:ec2][:public_hostname]}
+followershostnames = followers.collect {|n| n[:ec2][:public_hostname]}
+
+log "LeaderElection: #{node[:roles].first} Servers are : #{peershostnames.join ' '}"
+log "LeaderElection: #{node[:roles].first} Followers are : #{followershostnames.join ' '}"
+log "LeaderElection: #{node[:roles].first} Leader is : #{leader.ec2.public_hostname}"
+
+if (node.name == leader.name)
+  log "LeaderElection: I am leader"
+  include_recipe "priam-cassandra::opscenter-leader"
+  # install agent
+  # /opt/opscenter/agent/opscenter-agent.deb
+else 
+  log "LeaderElection: I am follower"
+  #follower code
+  # copying file from leader
+  log "copying deb from #{leader.name} #{leader.ec2.public_hostname}"
+  # install agent
+  # /opt/opscenter/agent/opscenter-agent.deb 
 end
 
-VERSION_DIR = "#{node[:cassandra][:opscenter_home]}-#{node[:cassandra][:opscenter][:version]}"
-
-# create the target directory
-directory VERSION_DIR do
-  owner     "#{node[:cassandra][:user]}"
-  group     "#{node[:tomcat][:user]}"
-  mode      0775
-  recursive true
-end
-
-# unpack
-execute "unpack #{local_archive}" do
-  command   "tar --strip-components 1 --no-same-owner -xzf #{local_archive}"
-  creates   "#{VERSION_DIR}/bin/opscenter"
-  user      "#{node[:cassandra][:user]}"
-  group     "#{node[:tomcat][:user]}"
-  cwd       VERSION_DIR
-end
-
-# link the priam_cass_home to the version directory
-link node[:cassandra][:opscenter_home] do
-  to        VERSION_DIR
-  owner     "#{node[:cassandra][:user]}"
-  group     "#{node[:tomcat][:user]}"
-end
-
-
-# This needs to be rewritten so that:
-# A master is elected (oldest node, first in a list, whatever)
-# Slave nodes launch pointed at the master using the agent/bin/opscenter-agent instead
-# PITA 
-# Not sure how to force twistd to the forground yet, 
-# so start it in the background, but not_if it's already running
-execute "Start Datastax OpsCenter" do
-  command   "#{node[:cassandra][:opscenter_home]}/bin/opscenter"
-  not_if    "ps -ef | grep twistd | grep -v grep"
-  user      "#{node[:cassandra][:user]}"
-  group     "#{node[:tomcat][:user]}"
-  cwd       node[:cassandra][:opscenter_home]
-end
-
-# Section to setup the agents
-# including some sort of master detection :/
-# agents run out of the agents dir.
-
-include_recipe "nginx_proxy"
