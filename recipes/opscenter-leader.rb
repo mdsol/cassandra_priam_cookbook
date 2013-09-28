@@ -49,4 +49,16 @@ execute "Start Datastax OpsCenter" do
   cwd       node[:cassandra][:opscenter_home]
 end
 
+# set readable permissions on agent.tar.gz
+file "#{node[:cassandra][:opscenter_home]}/agent.tar.gz" do
+  mode      0644
+end
+
 include_recipe "nginx_proxy"
+
+# Provide access to the agent.tar.gz on the leader via http/https
+rewind :template => "/etc/nginx/sites-available/nginx_proxy" do
+  source "nginx_proxy.erb"
+  cookbook_name "priam-cassandra" 
+end
+
