@@ -33,7 +33,7 @@ execute "unpack #{local_archive}" do
   cwd       VERSION_DIR
 end
 
-# link the priam_cass_home to the version directory
+# link the opscenter_home to the version directory
 link node[:cassandra][:opscenter_home] do
   to        VERSION_DIR
   owner     "#{node[:cassandra][:user]}"
