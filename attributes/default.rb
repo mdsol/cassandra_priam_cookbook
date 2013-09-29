@@ -48,5 +48,5 @@ default[:cassandra][:priam_cass_extensions_jar][:checksum] = "f5cbee81dd885d07c5
 
 # For DataStax OpsCenter
 include_attribute "nginx_proxy"
-default[:nginx_proxy][:http_port] = 8888
-default[:nginx_proxy][:https_port] = 8888
+node[:nginx_proxy][:http_port] = 8888
+node[:nginx_proxy][:https_port] = 8888
