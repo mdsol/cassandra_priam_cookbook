@@ -1,5 +1,8 @@
+log "Installing Opscenter Agent"
+
 # This search returns all other nodes sharing the unique? role
 peers = search(:node, "roles:#{node[:roles].first}" )
+# Leader is elected based on lowest numeric hostname
 leader = peers.sort{|a,b| a.name <=> b.name}.first
 
 # Install Agent

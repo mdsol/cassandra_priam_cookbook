@@ -1,6 +1,7 @@
+# Two packages needed for the Agent to work - all nodes run the Agent.
+
 # required for IO stat reporting
 package "sysstat"
-
 # required for opscenter agent connectivity
 package "libssl0.9.8"
 
@@ -12,22 +13,20 @@ log "LeaderElection: Roles : #{node[:roles].first}"
 
 # This search returns all other nodes sharing the unique? role
 peers = search(:node, "roles:#{node[:roles].first}" )
+# Leader is elected based on lowest numeric hostname
 leader = peers.sort{|a,b| a.name <=> b.name}.first
 
-# spam block - can be removed
-followers = peers.reject{|p| p.name == leader.name}
+# Some reporting on the election
 peershostnames = peers.collect {|n| n[:ec2][:public_hostname]}
-followershostnames = followers.collect {|n| n[:ec2][:public_hostname]}
 log "LeaderElection: #{node[:roles].first} Servers are : #{peershostnames.join ' '}"
-log "LeaderElection: #{node[:roles].first} Followers are : #{followershostnames.join ' '}"
 log "LeaderElection: #{node[:roles].first} Leader is : #{leader.ec2.public_hostname}"
 
 if (node.name == leader.name)
-  log "LeaderElection: I am leader"
-  include_recipe "priam-cassandra::opscenter-leader"
-  include_recipe "priam-cassandra::opscenter-followers"
+  # leader installs both recipes
+  include_recipe "priam-cassandra::opscenter-server"
+  include_recipe "priam-cassandra::opscenter-agent"
 else 
-  log "LeaderElection: I am follower"
-  include_recipe "priam-cassandra::opscenter-followers"
+  # follower install just the agent recipe
+  include_recipe "priam-cassandra::opscenter-agent"
 end
 

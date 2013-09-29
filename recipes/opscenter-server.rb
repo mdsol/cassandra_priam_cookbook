@@ -1,8 +1,4 @@
-# required for IO stat reporting
-package "sysstat"
-
-# required for opscenter to run
-package "libssl0.9.8"
+log "Installing Opscenter Server"
 
 # download source
 src_url = node[:cassandra][:opscenter][:src_url]
