@@ -14,7 +14,7 @@ remote_file "#{Chef::Config[:file_cache_path]}/#{leader.ec2.public_hostname}-ops
   mode "0644"
 end
 
-# Install the Agent according to the Documentation
+# Install the Agent according to the Documentation - but clear out the old address.yaml in case there is an update, in case the server changed.
 bash "Opscenter Agent Installation" do
   code <<-EOH
   cd /tmp/
@@ -22,8 +22,7 @@ bash "Opscenter Agent Installation" do
   cd agent
   ./bin/install_agent.sh opscenter-agent.deb #{leader.ec2.public_hostname}
   EOH
-  not_if "dpkg -l opscenter-agent | grep #{node[:cassandra][:opscenter][:version]}"
-  not_if "grep #{leader.ec2.public_hostname} /var/lib/opscenter-agent/conf/address.yaml"
+  not_if "dpkg -l opscenter-agent | grep #{node[:cassandra][:opscenter][:version]} && grep #{leader.ec2.public_hostname} /var/lib/opscenter-agent/conf/address.yaml"
 end
 
 # The install script starts it but we force it anyway here

@@ -17,8 +17,6 @@ peers = search(:node, "roles:#{node[:roles].first}" )
 leader = peers.sort{|a,b| a.name <=> b.name}.first
 
 # Some reporting on the election
-peershostnames = peers.collect {|n| n[:ec2][:public_hostname]}
-log "LeaderElection: #{node[:roles].first} Servers are : #{peershostnames.join ' '}"
 log "LeaderElection: #{node[:roles].first} Leader is : #{leader.ec2.public_hostname}"
 
 if (node.name == leader.name)
@@ -26,7 +24,9 @@ if (node.name == leader.name)
   include_recipe "priam-cassandra::opscenter-server"
   include_recipe "priam-cassandra::opscenter-agent"
 else 
-  # follower install just the agent recipe
+  # followers install just the agent recipe
   include_recipe "priam-cassandra::opscenter-agent"
+  # we don't clean up former opscenter servers because they may contain interesting data
+  # include_recipe "priam-cassandra::opscenter-remove-server" 
 end
 
