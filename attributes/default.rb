@@ -35,7 +35,7 @@ SRC = 'http://cloudteam-packages.s3.amazonaws.com/cassandra'
 # /cassandra/priam/priam-version/ (priam files)
 # checksums are sha256 - the default chef remote_file checksum - obviously these need to be modified for later versions of software
 default[:cassandra][:version] = "1.2.9"
-default[:cassandra][:src_url] = "http://downloads.datastax.com/community/#{node['cassandra']['nameprefix']}-bin-#{node['cassandra']['version']}.tar.gz"
+default[:cassandra][:src_url] = "http://downloads.datastax.com/community/#{node['cassandra']['nameprefix']}-#{node['cassandra']['version']}-bin.tar.gz"
 default[:cassandra][:checksum] = "1c908b92a9ad6024c65a1d5409fb9e5cad17b9bfb85a838edd79ac8e4fd44278"
 default[:cassandra][:opscenter][:version] = "3.2.2"
 default[:cassandra][:opscenter][:src_url] = "http://downloads.datastax.com/community//opscenter-#{node['cassandra']['opscenter']['version']}-free.tar.gz"
