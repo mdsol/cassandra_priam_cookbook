@@ -34,12 +34,12 @@ SRC = 'http://cloudteam-packages.s3.amazonaws.com/cassandra'
 # /cassandra/ (cassandra and opscenter files including an extracted agent tar.gz)
 # /cassandra/priam/priam-version/ (priam files)
 # checksums are sha256 - the default chef remote_file checksum - obviously these need to be modified for later versions of software
-default[:cassandra][:version] = "1.2.8"
-default[:cassandra][:src_url] = "#{SRC}/#{node['cassandra']['nameprefix']}-#{node['cassandra']['version']}.tar.gz"
-default[:cassandra][:checksum] = "f372c380a2639607580f2f14a393c54cc979bfbf630199381278845546fda077"
-default[:cassandra][:opscenter][:version] = "3.2.0"
-default[:cassandra][:opscenter][:src_url] = "#{SRC}/opscenter-#{node['cassandra']['opscenter']['version']}-free.tar.gz"
-default[:cassandra][:opscenter][:checksum] = "64d38d7e0060895993f70428468178b09d498e7531ab0d32f2a7547761a959bd"
+default[:cassandra][:version] = "1.2.9"
+default[:cassandra][:src_url] = "http://downloads.datastax.com/community/#{node['cassandra']['nameprefix']}-#{node['cassandra']['version']}.tar.gz"
+default[:cassandra][:checksum] = "1c908b92a9ad6024c65a1d5409fb9e5cad17b9bfb85a838edd79ac8e4fd44278"
+default[:cassandra][:opscenter][:version] = "3.2.2"
+default[:cassandra][:opscenter][:src_url] = "http://downloads.datastax.com/community//opscenter-#{node['cassandra']['opscenter']['version']}-free.tar.gz"
+default[:cassandra][:opscenter][:checksum] = "568b9e8767a0ed1bc7f101f39cf400f63fbba4f7dceefafab19c608aaf386950"
 default[:cassandra][:priam_version] = "1.2.17"
 default[:cassandra][:priam_web_war][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-web-#{node['cassandra']['priam_version']}.war"
 default[:cassandra][:priam_web_war][:checksum] = "fbc1779f9cff9a8e3a4933000a9f2784c2037519f0e1f2777ae39dfee9d831a0"
