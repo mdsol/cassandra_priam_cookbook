@@ -22,7 +22,7 @@ end
 
 # download source
 src_url = node[:cassandra][:src_url]
-local_archive = "/usr/local/src/#{::File.basename src_url}"
+local_archive = "#{Chef::Config[:file_cache_path]}/#{::File.basename src_url}"
 remote_file local_archive do
   source  src_url
   mode    0644

@@ -20,9 +20,17 @@ bash "Opscenter Agent Installation" do
   cd /tmp/
   tar zxvf #{Chef::Config[:file_cache_path]}/#{leader.ec2.public_hostname}-opscenter-#{node[:cassandra][:opscenter][:version]}-agent.tar.gz
   cd agent
-  ./bin/install_agent.sh opscenter-agent.deb #{leader.ec2.public_hostname}
+  ./bin/install_agent.sh opscenter-agent.deb #{leader.ipaddress}
   EOH
-  not_if "dpkg -l opscenter-agent | grep #{node[:cassandra][:opscenter][:version]} && grep #{leader.ec2.public_hostname} /var/lib/opscenter-agent/conf/address.yaml"
+  not_if "dpkg -l opscenter-agent | grep #{node[:cassandra][:opscenter][:version]} && grep #{leader.ipaddress} /var/lib/opscenter-agent/conf/address.yaml"
+end
+
+# opscenter server configuration
+template "/var/lib/opscenter-agent/conf/address.yaml" do
+  variables :leader_ipaddress => leader.ipaddress
+  source "address.yaml.erb"
+  mode      "0644"
+  notifies :restart, "service[opscenter-agent]", :immediately
 end
 
 # The install script starts it but we force it anyway here

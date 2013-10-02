@@ -6,7 +6,7 @@ server {
         access_log  <%= @log_dir %>/nginx_proxy.access.log;
   error_log   <%= @log_dir %>/nginx_proxy_ssl.error.log warn;
 
-location /agent.tar.gz { root /opt/opscenter ; }
+location /agent.tar.gz { root <%= node[:cassandra][:opscenter_home] %>-<%= node[:cassandra][:opscenter][:version] %> ; }
 
         location / {
             proxy_pass http://<%= @target_host %>:<%= @http_port %>;
@@ -41,7 +41,7 @@ server {
   ssl_certificate <%= @ssl_cert %>;
   ssl_certificate_key  <%= @ssl_cert_key %>;
 
-location /agent.tar.gz { root /opt/opscenter ; }
+location /agent.tar.gz { root <%= node[:cassandra][:opscenter_home] %>-<%= node[:cassandra][:opscenter][:version] %> ; }
 
         location / {
             proxy_pass http://<%= @target_host %>:<%= @https_port %>;

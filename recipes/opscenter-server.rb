@@ -2,7 +2,7 @@ log "Installing Opscenter Server"
 
 # download source
 src_url = node[:cassandra][:opscenter][:src_url]
-local_archive = "/usr/local/src/#{::File.basename src_url}"
+local_archive = "#{Chef::Config[:file_cache_path]}/#{::File.basename src_url}"
 remote_file local_archive do
   source  src_url
   mode    0644
@@ -34,6 +34,14 @@ link node[:cassandra][:opscenter_home] do
   to        VERSION_DIR
   owner     "#{node[:cassandra][:user]}"
   group     "#{node[:tomcat][:user]}"
+end
+
+# opscenter server configuration
+template "#{node[:cassandra][:opscenter_home]}/conf/opscenterd.conf" do
+  source "opscenterd.conf.erb"
+  owner     "#{node[:cassandra][:user]}"
+  group     "#{node[:tomcat][:user]}"
+  mode      "0640"
 end
 
 # start it up

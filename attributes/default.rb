@@ -50,3 +50,4 @@ default[:cassandra][:priam_cass_extensions_jar][:checksum] = "f5cbee81dd885d07c5
 include_attribute "nginx_proxy"
 node[:nginx_proxy][:http_port] = 8888
 node[:nginx_proxy][:https_port] = 8888
+node[:nginx_proxy][:target_host] = "#{node[:ipaddress]}"
