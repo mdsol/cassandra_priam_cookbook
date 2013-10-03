@@ -1,9 +1,9 @@
 Description
 ===========
 
-This cookbook exists to achieve a deployment of a Priam [1] Managed Cassandra [2] Cluster.
+This cookbook exists to achieve a deployment of a [Priam][1] Managed [Cassandra][2] Cluster.
 
-This cookbook creates the necessary SimpleDB databases [3] to manage the deployment along with some Priam/Cassandra configuration properties [4] managed via chef attributes.
+This cookbook creates the necessary [SimpleDB][3] databases to manage the deployment along with some Priam/Cassandra configuration [Properties][4] managed via chef attributes.
 
 This cookbook installs an Oracle JRE and the JNA package.
 
@@ -46,12 +46,12 @@ simpledbconfig.rb
 Usage
 =====
 
-To deploy Priam-driven Cassandra Clusters
+Include cassandra-priam in your runlist.
 
 Development
 ===========
 
-See github [5]
+See the [Github page][5]
 
 [5]: https://github.com/mdsol/cassandra_priam_cookbook
 
