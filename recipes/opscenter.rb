@@ -1,23 +1,23 @@
-# Two packages needed for the Agent to work - all nodes run the Agent.
+# Two packages needed for the Agent to work - all nodes run the Agent, including the Master, in our case.
 
 # required for IO stat reporting
 package "sysstat"
 # required for opscenter agent connectivity
 package "libssl0.9.8"
 
-# force the node to save so we find ourselves in search
-node.save
-
-# this does not mean this node will show up in a search yet, however.
-log "LeaderElection: Roles : #{node[:roles].first}"
-
+# A simplistic leadership election
 # This search returns all other nodes sharing the unique? role
 peers = search(:node, "roles:#{node[:roles].first}" )
 # Leader is elected based on lowest numeric hostname
 leader = peers.sort{|a,b| a.name <=> b.name}.first
 
+# set some global vars to be used by this and the agent recipe
+$leader_name = leader.name
+$leader_ipaddress = leader.ipaddress
+$leader_ec2_public_hostname = leader.ec2.public_hostname
+
 # Some reporting on the election
-log "LeaderElection: #{node[:roles].first} Leader is : #{leader.ec2.public_hostname}"
+log "Opscenter LeaderElection: #{node[:roles].first} Leader is : #{leader_name} #{leader_ec2_public_hostname} #{leader_ipaddress} "
 
 if (node.name == leader.name)
   # leader installs both recipes
@@ -26,7 +26,5 @@ if (node.name == leader.name)
 else 
   # followers install just the agent recipe
   include_recipe "priam-cassandra::opscenter-agent"
-  # we don't clean up former opscenter servers because they may contain interesting data
-  # include_recipe "priam-cassandra::opscenter-remove-server" 
 end
 

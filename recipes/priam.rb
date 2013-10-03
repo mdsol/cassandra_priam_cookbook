@@ -60,4 +60,9 @@ bash "Small Delay" do
   EOH
 end
 
+# fire up cassandra by creating a runit service for it - this uses templates which abstract the interesting parts.
+runit_service "cassandra" do
+  supports  :restart => false
+  env({ 'HOME' => node[:cassandra][:priam_cass_home] })
+end
 
