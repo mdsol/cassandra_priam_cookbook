@@ -44,10 +44,3 @@ default[:cassandra][:priam_version] = "1.2.17"
 default[:cassandra][:priam_web_war][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-web-#{node['cassandra']['priam_version']}.war"
 default[:cassandra][:priam_web_war][:checksum] = "fbc1779f9cff9a8e3a4933000a9f2784c2037519f0e1f2777ae39dfee9d831a0"
 default[:cassandra][:priam_cass_extensions_jar][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-cass-extensions-#{node['cassandra']['priam_version']}.jar"
-default[:cassandra][:priam_cass_extensions_jar][:checksum] = "f5cbee81dd885d07c5e3aff9b45de5a8cf9674eecc4a8af0bcd736a9c86afdab"
-
-# For DataStax OpsCenter
-include_attribute "nginx_proxy"
-node[:nginx_proxy][:http_port] = 8888
-node[:nginx_proxy][:https_port] = 8888
-node[:nginx_proxy][:target_host] = "#{node[:ipaddress]}"

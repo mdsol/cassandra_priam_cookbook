@@ -1,8 +1,8 @@
 # setup java - this ought to be replaced with the java cookbook
-include_recipe "priam-cassandra::oraclejava6"
+include_recipe "cassandra-priam::oraclejava6"
 
 # setup up performance optimizations
-include_recipe "priam-cassandra::optimizations"
+include_recipe "cassandra-priam::optimizations"
 
 # install tomcat
 package node[:tomcat][:packagename] do
@@ -13,14 +13,14 @@ end
 include_recipe "runit"
 
 # install cassandra server
-include_recipe "priam-cassandra::cassandra-installation"
+include_recipe "cassandra-priam::cassandra-installation"
 
 # install priam cluster management
-include_recipe "priam-cassandra::priam"
+include_recipe "cassandra-priam::priam"
 
 # start cassandra server
-include_recipe "priam-cassandra::cassandra-startup"
+include_recipe "cassandra-priam::cassandra-startup"
 
 # install opscenter cluster monitoring
-include_recipe "priam-cassandra::opscenter"
+include_recipe "cassandra-opscenter"
 

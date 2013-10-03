@@ -38,10 +38,10 @@ bash "Setup Agent in Cassandra Include File" do
 end
 
 # aws credentials
-include_recipe "priam-cassandra::awscredentials"
+include_recipe "cassandra-priam::awscredentials"
 
 # setup Priam/Cassandra configuration in Amazon SDB
-include_recipe "priam-cassandra::simpledbconfig"
+include_recipe "cassandra-priam::simpledbconfig"
 
 # Priam's War file goes into tomcat's special directory - this event causes Priam to start running.
 src_url = node[:cassandra][:priam_web_war][:src_url]
