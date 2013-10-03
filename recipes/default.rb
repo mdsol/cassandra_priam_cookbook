@@ -20,7 +20,3 @@ include_recipe "cassandra-priam::priam"
 
 # start cassandra server
 include_recipe "cassandra-priam::cassandra-startup"
-
-# install opscenter cluster monitoring
-include_recipe "cassandra-opscenter"
-
