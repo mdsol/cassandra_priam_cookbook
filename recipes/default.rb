@@ -12,14 +12,14 @@ end
 # some external dependencies
 include_recipe "runit"
 
-# install cassandra database server
+# install cassandra server
 include_recipe "priam-cassandra::cassandra-installation"
 
 # install priam cluster management
 include_recipe "priam-cassandra::priam"
 
-# runit installation and by extension the cassandra startup
-include_recipe "priam-cassandra::runit"
+# start cassandra server
+include_recipe "priam-cassandra::cassandra-startup"
 
 # install opscenter cluster monitoring
 include_recipe "priam-cassandra::opscenter"

@@ -53,16 +53,3 @@ remote_file local_archive do
   checksum node[:cassandra][:priam_web_war][:checksum]
 end
 
-# A small delay for Priam to start up / write the cassandra.yaml before running anything else
-bash "Small Delay" do
-  code <<-EOH
-  sleep 5
-  EOH
-end
-
-# fire up cassandra by creating a runit service for it - this uses templates which abstract the interesting parts.
-runit_service "cassandra" do
-  supports  :restart => false
-  env({ 'HOME' => node[:cassandra][:priam_cass_home] })
-end
-

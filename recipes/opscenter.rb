@@ -12,12 +12,12 @@ peers = search(:node, "roles:#{node[:roles].first}" )
 leader = peers.sort{|a,b| a.name <=> b.name}.first
 
 # set some global vars to be used by this and the agent recipe
-$leader_name = leader.name
-$leader_ipaddress = leader.ipaddress
-$leader_ec2_public_hostname = leader.ec2.public_hostname
+$LEADERNAME = leader.name
+$LEADERIPADDRESS = leader.ipaddress
+$LEADEREC2PUBLICHOSTNAME = leader.ec2.public_hostname
 
 # Some reporting on the election
-log "Opscenter LeaderElection: #{node[:roles].first} Leader is : #{leader_name} #{leader_ec2_public_hostname} #{leader_ipaddress} "
+log "Opscenter LeaderElection: #{node[:roles].first} Leader is : #{$LEADERNAME} #{$LEADEREC2PUBLICHOSTNAME} #{$LEADERIPADDRESS} "
 
 if (node.name == leader.name)
   # leader installs both recipes

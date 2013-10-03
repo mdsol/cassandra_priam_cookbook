@@ -18,6 +18,18 @@ chef_gem "fog" do
   version  "1.9.0"
 end
 
+# we attempt to automatically set the cluster_name based on the role name - this is sensible in our opinion.
+if node[:cassandra][:priam_clustername] == "SET_ME_PLEASE"
+  CLUSTERNAME = node[:roles].first
+  CLUSTERNAME.sub('-', '_')
+  log "Setting Cluster Name to #{CLUSTERNAME}"
+  node.set[:cassandra][:priam_clustername] = CLUSTERNAME
+end
+
+if node[:cassandra][:priam_s3_bucket] == "SET_ME_PLEASE"
+  log "If you want backups to work then you should set the [:cassandra][:priam_s3_bucket] attribute" { level :warn }
+end
+
 ruby_block "set-SimpleDB-Properties" do
   block do
       require 'fog'

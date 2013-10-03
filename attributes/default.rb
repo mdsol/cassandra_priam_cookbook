@@ -17,7 +17,7 @@ default[:tomcat][:user] = "tomcat7"
 # priam_clustername MUST match the autoscaling group name in order to be used
 # priam_clustername is effectively the reference to the correct set of SimpleDB Configuration
 default[:cassandra][:priam_clustername] = "SET_ME_PLEASE"
-default[:cassandra][:priam_s3_bucket] = "YOURORG-ENVIRONMENT-cassandra-backup"
+default[:cassandra][:priam_s3_bucket] = "SET_ME_PLEASE"
 default[:cassandra][:priam_s3_base_dir] = "cassandra_backups"
 default[:cassandra][:priam_cass_home] = "#{node[:cassandra][:parentdir]}/cassandra"
 default[:cassandra][:priam_data_location] = "/mnt/cassandra/data"
