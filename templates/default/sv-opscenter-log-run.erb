@@ -1,2 +1,2 @@
 #!/bin/sh
-exec svlogd -tt <%= node[:cassandra][:log_dir] %>
+exec svlogd -tt <%= node[:cassandra][:opscenter_home] %>/log
