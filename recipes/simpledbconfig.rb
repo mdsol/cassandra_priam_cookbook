@@ -1,3 +1,19 @@
+## SimpleDB Recipe
+# This recipe applies the simpledb configuration through just one node in the cluster.
+# This is done on only one node because it only needs to be done once, and amazon returns 503s if too many API calls happen.
+# We run this each run in case a variable is updated.
+
+node.save
+
+# A simplistic leadership election
+# This search returns all other nodes sharing the unique? role
+peers = search(:node, "roles:#{node[:roles].first}" )
+# Leader is elected based on lowest numeric hostname
+leader = peers.sort{|a,b| a.name <=> b.name}.first
+
+########################## 
+if (node.name == leader.name)
+
 buildessential = package "build-essential" do
   action:nothing
 end
@@ -56,3 +72,6 @@ ruby_block "set-SimpleDB-Properties" do
   end
   action :create
 end
+
+end
+##########################
