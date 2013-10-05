@@ -13,11 +13,16 @@ default[:tomcat][:packagename] = "tomcat7"
 default[:tomcat][:user] = "tomcat7"
 
 # These will be fed into SimpleDB for Priam's Configuration which in turn generates Cassandra's configuration
-# priam_clustername MUST match the autoscaling group name in order to be used
+# priam_clustername MUST match the autoscaling group name (before the dash) in order to be used i.e. project_stage_db-useast1 == cluster_name-ec2region
 # priam_clustername is effectively the reference to the correct set of SimpleDB Configuration
 default[:cassandra][:priam_clustername] = "SET_ME_PLEASE"
+# we will attempt to set this based on the role name, which should match the asg name. If your role does not match the name then this MUST be set.
 default[:cassandra][:priam_multiregion_enable] = "false"
+# set this to true for multiregion
+default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2Snitch"
+# set this to org.apache.cassandra.locator.Ec2MultiRegionSnitch for multiregion
 default[:cassandra][:priam_zones_available] = nil
+# these need to be set for multiregion i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c"
 default[:cassandra][:priam_s3_bucket] = "SET_ME_PLEASE"
 default[:cassandra][:priam_s3_base_dir] = "cassandra_backups"
 default[:cassandra][:priam_cass_home] = "#{node[:cassandra][:parentdir]}/cassandra"
