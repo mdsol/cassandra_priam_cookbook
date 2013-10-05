@@ -17,6 +17,8 @@ default[:tomcat][:webappsroot] = "/var/lib/tomcat7/webapps"
 default[:tomcat][:packagename] = "tomcat7"
 default[:tomcat][:user] = "tomcat7"
 
+# multi region switch variable - switching to true or false sets priam variables - we default to single region i.e. false
+default[:cassandra][:multiregion] = "false"
 
 # Start of SimpleDB Config Attributes
 
@@ -28,11 +30,13 @@ default[:tomcat][:user] = "tomcat7"
 # we will attempt to set this based on the role name, which should match the asg name. If your role does not match the name then this MUST be set.
 default[:cassandra][:priam_clustername] = "SET_ME_PLEASE"
 
-# set this to true for multiregion
-default[:cassandra][:priam_multiregion_enable] = "false"
-
-# set this to org.apache.cassandra.locator.Ec2MultiRegionSnitch for multiregion
-default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2Snitch"
+if node[:cassandra][:multiregion] == "true"
+  default[:cassandra][:priam_multiregion_enable] = "true"
+  default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
+elsif node[:cassandra][:multiregion] == "false"
+  default[:cassandra][:priam_multiregion_enable] = "false"
+  default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2Snitch"
+end
 
 # This must be set for all multiregion and any single region deployments outside the first three AZs/datacenters in a region
 # i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
