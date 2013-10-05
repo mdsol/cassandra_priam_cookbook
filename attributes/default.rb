@@ -1,29 +1,48 @@
 # Various Install attributes
+# The following two variables is used for reading config from SimpleDB and for making Backups to S3 - the MUST be set for things to work
 default[:cassandra][:aws][:access_key_id] = nil
 default[:cassandra][:aws][:secret_access_key] = nil
+
 default[:cassandra][:user] = "cassandra"
 default[:cassandra][:log_dir] = "/var/log/cassandra" # where it this set or used ?
-# datastax cassandra comes prefixed dsc-cassandra - modify as necessary for your needs
+
+# datastax's build of cassandra comes prefixed dsc-cassandra - modify as necessary for your needs
 default[:cassandra][:nameprefix] = "dsc-cassandra"
+
+# we will try to install all software to this path
 default[:cassandra][:parentdir] = "/opt"
 
-# Tomcat defaults for Ubuntu - these are needed by Priam
+# tomcat defaults for Ubuntu - these are needed by Priam
 default[:tomcat][:webappsroot] = "/var/lib/tomcat7/webapps"
 default[:tomcat][:packagename] = "tomcat7"
 default[:tomcat][:user] = "tomcat7"
 
-# These will be fed into SimpleDB for Priam's Configuration which in turn generates Cassandra's configuration
+
+# Start of SimpleDB Config Attributes
+
+# The following variables are used to feed SimpleDB
+# Priam configures Cassandra and itself using these variables
+
 # priam_clustername MUST match the autoscaling group name (before the dash) in order to be used i.e. project_stage_db-useast1 == cluster_name-ec2region
 # priam_clustername is effectively the reference to the correct set of SimpleDB Configuration
-default[:cassandra][:priam_clustername] = "SET_ME_PLEASE"
 # we will attempt to set this based on the role name, which should match the asg name. If your role does not match the name then this MUST be set.
-default[:cassandra][:priam_multiregion_enable] = "false"
+default[:cassandra][:priam_clustername] = "SET_ME_PLEASE"
+
 # set this to true for multiregion
-default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2Snitch"
+default[:cassandra][:priam_multiregion_enable] = "false"
+
 # set this to org.apache.cassandra.locator.Ec2MultiRegionSnitch for multiregion
+default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2Snitch"
+
+# This must be set for all multiregion and any single region deployments outside the first three AZs/datacenters in a region
+# i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
+# If not set it will not be applied
 default[:cassandra][:priam_zones_available] = nil
-# these need to be set for multiregion i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c"
+
+# If you want backups, set this variable to the name of an s3 bucket
 default[:cassandra][:priam_s3_bucket] = "SET_ME_PLEASE"
+
+# The rest - relatively self-explanatory variables, safe defaults for ec2 deployment
 default[:cassandra][:priam_s3_base_dir] = "cassandra_backups"
 default[:cassandra][:priam_cass_home] = "#{node[:cassandra][:parentdir]}/cassandra"
 default[:cassandra][:priam_data_location] = "/mnt/cassandra/data"
@@ -33,7 +52,9 @@ default[:cassandra][:priam_cass_startscript] = "/etc/init.d/cassandra start"
 default[:cassandra][:priam_cass_stopscript] = "/etc/init.d/cassandra stop"
 default[:cassandra][:priam_upload_throttle] = "5"
 
-# This cookbooks requires a LOT of software to be stored in an http server.
+# End of SimpleDB Config Attributes
+
+# This cookbooks pull a significant amount of software from http servers.
 # Source files are in a Medidata-controlled S3 bucket with no authentication
 SRC = 'http://cloudteam-packages.s3.amazonaws.com/cassandra'
 # you can roll your own as necessary.
