@@ -62,3 +62,11 @@ link "#{node[:cassandra][:priam_cass_home]}/lib/jna.jar" do
   only_if { ::File.exists? "/usr/share/java/jna.jar" }
 end
 
+# create a runit service for cassandra, but do not start it
+# this uses templates which abstract the interesting parts.
+# Priam starts cassandra when it starts up.
+runit_service "cassandra" do
+  supports  :restart => true
+  action :enable
+  env({ 'HOME' => node[:cassandra][:priam_cass_home] })
+end

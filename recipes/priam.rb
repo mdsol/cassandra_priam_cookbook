@@ -14,7 +14,7 @@ remote_file local_archive do
   checksum node[:cassandra][:priam_cass_extensions_jar][:checksum]
 end
 
-# Give priam running as node[:tomcat][:user] access to write the config
+# Give priam running as node[:tomcat][:user] access to write the Cassandra config
 file "#{node[:cassandra][:priam_cass_home]}/conf/cassandra.yaml" do
   owner     "#{node[:tomcat][:user]}"
   group     "#{node[:tomcat][:user]}"
@@ -37,13 +37,8 @@ bash "Setup Agent in Cassandra Include File" do
   not_if "grep #{node[:cassandra][:priam_version]} #{node[:cassandra][:priam_cass_home]}/cassandra.in.sh"
 end
 
-# aws credentials
-include_recipe "cassandra-priam::awscredentials"
-
-# setup Priam/Cassandra configuration in Amazon SDB
-include_recipe "cassandra-priam::simpledbconfig"
-
 # Priam's War file goes into tomcat's special directory - this event causes Priam to start running.
+# When Priam runs, it configures cassandra and starts it, either replacing a lost node or booting a new one.
 src_url = node[:cassandra][:priam_web_war][:src_url]
 local_archive = "#{node[:tomcat][:webappsroot]}/Priam.war"
 remote_file local_archive do

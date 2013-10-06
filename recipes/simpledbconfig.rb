@@ -3,16 +3,8 @@
 # This is done on only one node because it only needs to be done once, and amazon returns 503s if too many API calls happen.
 # We run this each run in case a variable is updated.
 
-node.save
-
-# A simplistic leadership election
-# This search returns all other nodes sharing the unique? role
-peers = search(:node, "roles:#{node[:roles].first}" )
-# Leader is elected based on lowest numeric hostname
-leader = peers.sort{|a,b| a.name <=> b.name}.first
-
 ########################## 
-if (node.name == leader.name)
+# we are the leader - lets get to work..
 
 buildessential = package "build-essential" do
   action:nothing
@@ -34,15 +26,16 @@ chef_gem "fog" do
   version  "1.9.0"
 end
 
-# we attempt to automatically set the cluster_name based on the role name - this is sensible in our opinion.
+# we attempt to automatically set the cluster_name based on the role name - this is sensible in the Author's opinion.
+# you can always force your own clustername if you desire, but it really should match the autoscaling group's name (everthing before the first dash "-")
 if node['cassandra']['priam_clustername'] == "SET_ME_PLEASE"
   CLUSTERNAME = node[:roles].first.gsub("-", "_")
-  log "Setting Cluster Name to #{CLUSTERNAME}"
+  log "INFO: Setting Cluster Name to #{CLUSTERNAME}"
   node.set[:cassandra][:priam_clustername] = CLUSTERNAME
 end
 
 if node['cassandra']['priam_s3_bucket'] == "SET_ME_PLEASE"
-  log "If you want backups to work then you should set the [:cassandra][:priam_s3_bucket] attribute"
+  log "WARNING: You should set the [:cassandra][:priam_s3_bucket] to something other than #{node['cassandra']['priam_s3_bucket']}"
 end
 
 ruby_block "set-SimpleDB-Properties" do
