@@ -20,7 +20,7 @@ include_recipe "cassandra-priam::awscredentials"
 ## Simplistic leader election
 node.save
 peers = search(:node, "roles:#{node[:roles].first}" )
-leader = peers.sort{|a,b| a.uptime_seconds <=> b.uptime_seconds}.last || node    # the "or" covers the case where node is the first db
+leader = peers.sort{|a,b| a.name <=> b.name}.first || node # the "or" covers the case where node is the first db
 
 # Some reporting on the election
 log "cassandra-opscenter LeaderElection: #{node[:roles].first} Leader is : #{leader.name} #{leader.ec2.public_hostname} #{leader.ipaddress}"
