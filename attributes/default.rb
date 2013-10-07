@@ -3,21 +3,22 @@
 default[:cassandra][:aws][:access_key_id] = nil
 default[:cassandra][:aws][:secret_access_key] = nil
 
+# We will create this user
 default[:cassandra][:user] = "cassandra"
-default[:cassandra][:log_dir] = "/var/log/cassandra" # where it this set or used ?
+default[:cassandra][:log_dir] = "/var/log/cassandra"
 
-# datastax's build of cassandra comes prefixed dsc-cassandra - modify as necessary for your needs
+# Datastax's build of cassandra comes prefixed dsc-cassandra - modify as necessary for your needs
 default[:cassandra][:nameprefix] = "dsc-cassandra"
 
-# we will try to install all software to this path
+# We will try to install all software to this path
 default[:cassandra][:parentdir] = "/opt"
 
-# tomcat defaults for Ubuntu - these are needed by Priam
+# Tomcat defaults for Ubuntu - these are needed by Priam
 default[:tomcat][:webappsroot] = "/var/lib/tomcat7/webapps"
 default[:tomcat][:packagename] = "tomcat7"
 default[:tomcat][:user] = "tomcat7"
 
-# multi region switch variable - switching to true or false sets priam variables - we default to single region i.e. false
+# Multi region switch variable - switching to true or false sets priam variables - we default to single region i.e. false
 default[:cassandra][:multiregion] = "false"
 
 # Start of SimpleDB Config Attributes
@@ -46,7 +47,7 @@ default[:cassandra][:priam_zones_available] = nil
 # If you want backups, set this variable to the name of an s3 bucket
 default[:cassandra][:priam_s3_bucket] = "SET_ME_PLEASE"
 
-# The rest - relatively self-explanatory variables, safe defaults for ec2 deployment
+# The rest - relatively self-explanatory variables, safe defaults for ec2 deployment where /mnt is a large block device.
 default[:cassandra][:priam_s3_base_dir] = "cassandra_backups"
 default[:cassandra][:priam_cass_home] = "#{node[:cassandra][:parentdir]}/cassandra"
 default[:cassandra][:priam_data_location] = "/mnt/cassandra/data"
@@ -58,17 +59,18 @@ default[:cassandra][:priam_upload_throttle] = "5"
 
 # End of SimpleDB Config Attributes
 
-# This cookbooks pull a significant amount of software from http servers.
-# Source files are in a Medidata-controlled S3 bucket with no authentication
-SRC = 'http://cloudteam-packages.s3.amazonaws.com/cassandra'
-# you can roll your own as necessary.
-# /cassandra/priam/priam-version/ (priam files)
-# checksums are sha256 - the default chef remote_file checksum - obviously these need to be modified for later versions of software
+# Where to get Cassandra from: Directly from Datastax
 default[:cassandra][:version] = "1.2.10"
 default[:cassandra][:src_url] = "http://downloads.datastax.com/community/#{node['cassandra']['nameprefix']}-#{node['cassandra']['version']}-bin.tar.gz"
 default[:cassandra][:checksum] = "c731c8e2bc84769f884f423fb839ab3205279972b842ab37fdace49ef511e544"
+
+# Priam Build Sources
+# If someone starts providing builds of Priam - this would be good.
+# Source files are in a Medidata-controlled S3 bucket with no authentication
+SRC = 'http://cloudteam-packages.s3.amazonaws.com/cassandra'
 default[:cassandra][:priam_version] = "1.2.17"
 default[:cassandra][:priam_web_war][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-web-#{node['cassandra']['priam_version']}.war"
 default[:cassandra][:priam_web_war][:checksum] = "fbc1779f9cff9a8e3a4933000a9f2784c2037519f0e1f2777ae39dfee9d831a0"
 default[:cassandra][:priam_cass_extensions_jar][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-cass-extensions-#{node['cassandra']['priam_version']}.jar"
 default[:cassandra][:priam_cass_extensions_jar][:checksum] = "f5cbee81dd885d07c5e3aff9b45de5a8cf9674eecc4a8af0bcd736a9c86afdab"
+
