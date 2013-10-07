@@ -76,5 +76,4 @@ ruby_block "set-SimpleDB-Properties" do
   action :create
 end
 
-end
 ##########################
