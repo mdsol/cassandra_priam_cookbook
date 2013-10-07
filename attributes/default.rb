@@ -30,10 +30,10 @@ default[:cassandra][:multiregion] = "false"
 # we will attempt to set this based on the role name, which should match the asg name. If your role does not match the name then this MUST be set.
 default[:cassandra][:priam_clustername] = "SET_ME_PLEASE"
 
-if node[:cassandra][:multiregion] == "true"
+if node[:cassandra][:multiregion] = "true"
   default[:cassandra][:priam_multiregion_enable] = "true"
   default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
-elsif node[:cassandra][:multiregion] == "false"
+elsif node[:cassandra][:multiregion] = "false"
   default[:cassandra][:priam_multiregion_enable] = "false"
   default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2Snitch"
 end
@@ -71,3 +71,4 @@ default[:cassandra][:priam_version] = "1.2.17"
 default[:cassandra][:priam_web_war][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-web-#{node['cassandra']['priam_version']}.war"
 default[:cassandra][:priam_web_war][:checksum] = "fbc1779f9cff9a8e3a4933000a9f2784c2037519f0e1f2777ae39dfee9d831a0"
 default[:cassandra][:priam_cass_extensions_jar][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-cass-extensions-#{node['cassandra']['priam_version']}.jar"
+default[:cassandra][:priam_cass_extensions_jar][:checksum] = "f5cbee81dd885d07c5e3aff9b45de5a8cf9674eecc4a8af0bcd736a9c86afdab"
