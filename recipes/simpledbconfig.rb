@@ -55,7 +55,6 @@ ruby_block "set-SimpleDB-Properties" do
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.s3.bucket", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.s3.bucket", "value" => "#{node['cassandra']['priam_s3_bucket']}"})
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.s3.base_dir", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.s3.base_dir", "value" => "#{node['cassandra']['priam_s3_base_dir']}"})
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.clustername", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.clustername", "value" => "#{node['cassandra']['priam_clustername']}"})
-      sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.multiregion.enable", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.multiregion.enable", "value" => "#{node['cassandra']['priam_multiregion_enable']}"})
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.endpoint_snitch", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.endpoint_snitch", "value" => "#{node['cassandra']['priam_endpoint_snitch']}"})
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.data.location", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.data.location", "value" => "#{node['cassandra']['priam_data_location']}"})
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.cache.location", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.cache.location", "value" => "#{node['cassandra']['priam_cache_location']}"})
@@ -66,8 +65,13 @@ ruby_block "set-SimpleDB-Properties" do
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.upload.throttle", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.upload.throttle", "value" => "#{node['cassandra']['priam_upload_throttle']}"})
       
       # unsafe attribute : present but empty on certain deployments this breaks them
-      
-      # priam.zones.available shuld not be created if there is no non-nil (i.e. overriding) chef node attribute for it - reason: it breaks single-region deployments. caveat: must be set for multi-region deployments.
+
+      # priam.multiregion.enable should only be created if it isn't false - otherwise, if there is a record present, priam will try to modify a security group unnecessarily
+      if node['cassandra']['priam_multiregion_enable'] != "false"
+        sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.multiregion.enable", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.multiregion.enable", "value" => "#{node['cassandra']['priam_multiregion_enable']}"})
+      end
+
+      # priam.zones.available should not be created if there is no non-nil (i.e. overriding) chef node attribute for it - reason: it breaks single-region deployments. caveat: must be set for multi-region deployments.
       if node['cassandra']['priam_zones_available'] != nil
         sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.zones.available", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.zones.available", "value" => "#{node['cassandra']['priam_zones_available']}"})
       end
