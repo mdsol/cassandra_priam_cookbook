@@ -30,10 +30,10 @@ default[:cassandra][:multiregion] = "false"
 # we will attempt to set this based on the role name, which should match the asg name. If your role does not match the name then this MUST be set.
 default[:cassandra][:priam_clustername] = "SET_ME_PLEASE"
 
-if node[:cassandra][:multiregion] = "true"
+if node[:cassandra][:multiregion] =~ /true/
   default[:cassandra][:priam_multiregion_enable] = "true"
   default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
-elsif node[:cassandra][:multiregion] = "false"
+else
   default[:cassandra][:priam_multiregion_enable] = "false"
   default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2Snitch"
 end
