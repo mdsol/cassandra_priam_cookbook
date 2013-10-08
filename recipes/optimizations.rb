@@ -4,16 +4,16 @@
 file "/etc/security/limits.d/cassandra.conf" do
   mode    0644
   content <<-EOF
-cassandra soft as unlimited
-cassandra hard as unlimited
+#{node[:cassandra][:user]} soft as unlimited
+#{node[:cassandra][:user]} hard as unlimited
 root soft as unlimited
 root hard as unlimited
-cassandra soft memlock unlimited
-cassandra hard memlock unlimited
+#{node[:cassandra][:user]} soft memlock unlimited
+#{node[:cassandra][:user]} hard memlock unlimited
 root soft memlock unlimited
 root hard memlock unlimited
-cassandra soft nofile 32768
-cassandra hard nofile 32768
+#{node[:cassandra][:user]} soft nofile 32768
+#{node[:cassandra][:user]} hard nofile 32768
 root soft nofile 32768
 root hard nofile 32768
 EOF
