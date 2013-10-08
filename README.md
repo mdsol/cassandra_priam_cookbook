@@ -7,11 +7,11 @@ This cookbook elects a leader to create the necessary [SimpleDB][3] databases/co
 
 Priam is a sidecar application that takes care of Cassandra Configuration, Startup, Seeding and Node Replacement, Backups (to s3) and Restoration (from s3). It makes the lifecycle of Cassandra clusters much easier to manage.
 
-This cookbook installs the JNA package.
+This cookbook installs the [JNA][5] package.
 
 Special Caveats:
 
-This cookbook and the software it deploys are only designed to work under AWS EC2 with Autoscaling and SimpleDB.
+This cookbook and the software it deploys are only designed to work under AWS EC2 with [Autoscaling][6] and [SimpleDB][3].
 
 You should check that the credentials you provide have the necessary accesss to use the relevant AWS services.
 
@@ -23,50 +23,46 @@ Contact Amazon to get your SimpleDB limits increased moderately with your usage.
 
 This cookbook will attempt to configure a cluster_name based on the unique role name.
 
-[1]: https://github.com/Netflix/Priam
-[2]: http://planetcassandra.org/Download/DataStaxCommunityEdition
-[3]: http://aws.amazon.com/simpledb/
-[4]: https://github.com/Netflix/Priam/wiki/Properties
-
 Requirements
 ============
 * Chef 10.16.4+
-* Amazon AWS
-* Amazon Autoscaling
-* Amazon SimpleDB
-* Java cookbook because all the software installed runs on Java.
-* Tomcat cookbook.
-* Fog Gem for SimpleDB manipulation.
+* [Amazon Autoscaling][6]
+* [Amazon SimpleDB][3]
+* [Java cookbook][8]
+* [Tomcat cookbook][9]
+* [Fog Gem][10]
 
 ## Platform
 
-* Ubuntu 12.04+ [tested heavily.]
-* Probably other Linux Distros with some tweaking. This cookbook does not call any package managers directly but rather through the chef package resource, but package names and installation details may differ.
+* Ubuntu 12.04+ [tested heavily]
+* Probably other Linux Distros with some tweaking. 
+
+Note: This cookbook does not call any package managers directly but rather through the chef package resource, but package names and installation paths may differ.
 
 Attributes
 ==========
 
-See the contents of attributes/default.rb where there are accurate comments and self-explanatory attribute names.
+See the contents of `attributes/default.rb` where there are accurate comments and self-explanatory attribute names.
 
 Recipes
 =======
 
-* default.rb : A dummy recipe pointing to install.rb
-* install.rb : Installs everything by calling the rest of the recipes in the right order. Includes a leadership election section for applying simpledbconfig.
-* awscredentials.rb : Creates AWS Credentials on the /etc filesystem.
-* cassandra.rb : Installs Cassandra
-* optimizations.rb : Applies Optimizations to limits.d
-* priam.rb : Installs Priam
-* simpledbconfig.rb : Applies SimpleDB configuration
+* `default.rb` : A dummy recipe pointing to install.rb
+* `install.rb` : Installs everything by calling the rest of the recipes in the right order. Includes a leadership election section for applying simpledbconfig.
+* `awscredentials.rb` : Creates AWS Credentials on the /etc filesystem.
+* `cassandra.rb` : Installs Cassandra
+* `optimizations.rb` : Applies Optimizations to limits.d
+* `priam.rb` : Installs Priam
+* `simpledbconfig.rb` : Applies SimpleDB configuration
 
 Usage
 =====
 
 Include cassandra-priam in your unique role's runlist.
 
-## Minimum recommended deployment variables:
+# Minimum recommended deployment variables:
 
-# singleregion:
+## singleregion:
 
 ```JSON
 "cassandra": {
@@ -74,7 +70,7 @@ Include cassandra-priam in your unique role's runlist.
 }
 ```
 
-# multiregion:
+## multiregion:
 
 ```JSON
 "cassandra": {
@@ -84,21 +80,21 @@ Include cassandra-priam in your unique role's runlist.
 }
 ```
 
-## Other recommended settings:
+# Other recommended settings:
 
-# AWS Keys
+## AWS Keys
 
 ```JSON
 "cassandra": {
   "aws": {
-      "access_key_id": "YOURKEYID"
+      "access_key_id": "YOURKEYID",
       "secret_access_key": "YOURACCESSKEY"
-    }
   }
 }
+
 ```
 
-# Java
+## Java
 
 ```JSON
 "java": {
@@ -110,16 +106,16 @@ Include cassandra-priam in your unique role's runlist.
 }
 ```
 
-## Putting It Together with Autoscaling Commands
+# Putting It Together with Autoscaling Commands
 
-# singleregion
+## singleregion
 
 ```SHELL
 as-create-launch-config unique_cassandra_cluster_name-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
 as-create-auto-scaling-group unique_cassandra_cluster_name-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1c
 ```
 
-# multiregion
+## multiregion
 
 ```SHELL
 as-create-launch-config unique_cassandra_cluster_name-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt 
@@ -131,9 +127,21 @@ as-create-auto-scaling-group unique_cassandra_cluster_name-uswest1 --region us-w
 Development
 ===========
 
-See the [Github page][5]
+See the [Github page][7]
 
-[5]: https://github.com/mdsol/cassandra_priam_cookbook
+Links
+=====
+
+[1]: https://github.com/Netflix/Priam
+[2]: http://planetcassandra.org
+[3]: http://aws.amazon.com/simpledb
+[4]: https://github.com/Netflix/Priam/wiki/Properties
+[5]: https://github.com/twall/jna
+[6]: http://aws.amazon.com/autoscaling
+[7]: https://github.com/mdsol/cassandra_priam_cookbook
+[8]: http://community.opscode.com/cookbooks/java
+[9]: http://community.opscode.com/cookbooks/tomcat
+[10]: https://rubygems.org/gems/fog
 
 License and Authors
 ===================
