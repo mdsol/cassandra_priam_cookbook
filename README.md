@@ -30,13 +30,13 @@ This cookbook will attempt to configure a cluster_name based on the unique role 
 
 Requirements
 ============
-Chef 10.16.4+
-Amazon AWS
-Amazon Autoscaling
-Amazon SimpleDB
-Java cookbook because all the software installed runs on Java.
-Tomcat cookbook.
-Fog Gem for SimpleDB manipulation.
+* Chef 10.16.4+
+* Amazon AWS
+* Amazon Autoscaling
+* Amazon SimpleDB
+* Java cookbook because all the software installed runs on Java.
+* Tomcat cookbook.
+* Fog Gem for SimpleDB manipulation.
 
 ## Platform
 
@@ -51,13 +51,13 @@ See the contents of attributes/default.rb where there are accurate comments and 
 Recipes
 =======
 
-default.rb
-install.rb
-awscredentials.rb
-cassandra.rb
-optimizations.rb
-priam.rb
-simpledbconfig.rb
+* default.rb : A dummy recipe pointing to install.rb
+* install.rb : Installs everything by calling the rest of the recipes in the right order. Includes a leadership election section for applying simpledbconfig.
+* awscredentials.rb : Creates AWS Credentials on the /etc filesystem.
+* cassandra.rb : Installs Cassandra
+* optimizations.rb : Applies Optimizations to limits.d
+* priam.rb : Installs Priam
+* simpledbconfig.rb : Applies SimpleDB configuration
 
 Usage
 =====
@@ -68,22 +68,27 @@ Include cassandra-priam in your unique role's runlist.
 
 # singleregion:
 
+```JSON
 "cassandra": {
   "priam_s3_bucket": "YOURORG-cassandra-backups"
 }
+```
 
 # multiregion:
 
+```JSON
 "cassandra": {
   "priam_s3_bucket": "YOURORG-cassandra-backups",
   "multiregion": "true",
   "priam_zones_available": "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c"
 }
+```
 
 ## Other recommended settings:
 
 # AWS Keys
 
+```JSON
 "cassandra": {
   "aws": {
       "access_key_id": "YOURKEYID"
@@ -91,9 +96,11 @@ Include cassandra-priam in your unique role's runlist.
     }
   }
 }
+```
 
 # Java
 
+```JSON
 "java": {
   "install_flavor": "oracle",
   "jdk_version": "7",
@@ -101,20 +108,25 @@ Include cassandra-priam in your unique role's runlist.
     "accept_oracle_download_terms": "true"
   }
 }
+```
 
 ## Putting It Together with Autoscaling Commands
 
 # singleregion
 
+```SHELL
 as-create-launch-config unique_cassandra_cluster_name-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
 as-create-auto-scaling-group unique_cassandra_cluster_name-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1c
+```
 
 # multiregion
 
+```SHELL
 as-create-launch-config unique_cassandra_cluster_name-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt 
 as-create-launch-config unique_cassandra_cluster_name-uswest1 --region us-west-1 --image-id ami-acf9cde9 --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
 as-create-auto-scaling-group unique_cassandra_cluster_name-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 24 --min-size 12 --availability-zones us-east-1a,us-east-1c
 as-create-auto-scaling-group unique_cassandra_cluster_name-uswest1 --region us-west-1 --launch-configuration unique_cassandra_cluster_name-uswest1 --max-size 24 --min-size 12 --availability-zones us-west-1a,us-west-1b,us-west-1c
+```
 
 Development
 ===========
