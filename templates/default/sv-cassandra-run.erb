@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 cd <%= node[:cassandra][:priam_cass_home] %>
 exec 2>&1
-exec chpst -u cassandra -e /etc/sv/cassandra/env ./bin/cassandra -f
+exec chpst -u <%= node[:cassandra][:user] %> -e /etc/sv/cassandra/env ./bin/cassandra -f
