@@ -1,4 +1,10 @@
 ###
+# External Attributes
+
+# Sensible defaults for Ubuntu - these are needed by Priam
+default[:tomcat][:base_version] = "7"
+
+###
 # Various Install attributes
 
 # The following two variables is used for reading config from SimpleDB and for making Backups to S3 - the MUST be set for things to work
@@ -15,9 +21,8 @@ default[:cassandra][:nameprefix] = "dsc-cassandra"
 # We will try to install all software to this path
 default[:cassandra][:parentdir] = "/opt"
 
-# Tomcat defaults for Ubuntu - these are needed by Priam
-default[:tomcat][:base_version] = "7"
-default[:tomcat][:webappsroot] = "/var/lib/tomcat7/webapps"
+# Fog gem version - used to write to SimpleDB
+default[:cassandra][:fog][:version] = "1.9.0"
 
 # This package name may be different on untested distributions so we make it an attribute
 default[:cassandra][:jnapackagename] = "libjna-java"

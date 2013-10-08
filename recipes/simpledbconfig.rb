@@ -1,29 +1,11 @@
-## SimpleDB Recipe
-# This recipe applies the simpledb configuration through just one node in the cluster.
-# This is done on only one node because it only needs to be done once, and amazon returns 503s if too many API calls happen.
-# We run this each run in case a variable is updated.
+## SimpleDB Configuration Recipe
 
-########################## 
-# we are the leader - lets get to work..
-
-buildessential = package "build-essential" do
-  action:nothing
-end
-
-xsltdev = package "libxslt-dev" do
-  action :nothing
-end
-
-xmldev = package "libxml2-dev" do
-  action :nothing
-end
-
-buildessential.run_action(:install)
-xsltdev.run_action(:install)
-xmldev.run_action(:install)
+package "build-essential"
+package "libxslt-dev"
+package "libxml2-dev"
 
 chef_gem "fog" do
-  version  "1.9.0"
+  version node[:cassandra][:fog][:version] 
 end
 
 # we attempt to automatically set the cluster_name based on the role name - this is sensible in the Author's opinion.
@@ -34,6 +16,7 @@ if node['cassandra']['priam_clustername'] == "SET_ME_PLEASE"
   node.set[:cassandra][:priam_clustername] = CLUSTERNAME
 end
 
+# Warn if the bucket is still poorly named.
 if node['cassandra']['priam_s3_bucket'] == "SET_ME_PLEASE"
   log "WARNING: You should set the [:cassandra][:priam_s3_bucket] to something other than #{node['cassandra']['priam_s3_bucket']}"
 end
