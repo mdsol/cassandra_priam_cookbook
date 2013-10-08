@@ -1,4 +1,6 @@
+###
 # Various Install attributes
+
 # The following two variables is used for reading config from SimpleDB and for making Backups to S3 - the MUST be set for things to work
 default[:cassandra][:aws][:access_key_id] = nil
 default[:cassandra][:aws][:secret_access_key] = nil
@@ -14,13 +16,16 @@ default[:cassandra][:nameprefix] = "dsc-cassandra"
 default[:cassandra][:parentdir] = "/opt"
 
 # Tomcat defaults for Ubuntu - these are needed by Priam
+default[:tomcat][:base_version] = "7"
 default[:tomcat][:webappsroot] = "/var/lib/tomcat7/webapps"
-default[:tomcat][:packagename] = "tomcat7"
-default[:tomcat][:user] = "tomcat7"
+
+# This package name may be different on untested distributions so we make it an attribute
+default[:cassandra][:jnapackagename] = "libjna-java"
 
 # Multi region switch variable - switching to true or false sets priam variables - we default to single region i.e. false
 default[:cassandra][:multiregion] = "false"
 
+###
 # Start of SimpleDB Config Attributes
 
 # The following variables are used to feed SimpleDB
@@ -57,7 +62,8 @@ default[:cassandra][:priam_cass_startscript] = "/etc/init.d/cassandra start"
 default[:cassandra][:priam_cass_stopscript] = "/etc/init.d/cassandra stop"
 default[:cassandra][:priam_upload_throttle] = "5"
 
-# End of SimpleDB Config Attributes
+###
+# Where to get the software..
 
 # Where to get Cassandra from: Directly from Datastax
 default[:cassandra][:version] = "1.2.10"

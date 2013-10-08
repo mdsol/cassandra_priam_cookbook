@@ -1,15 +1,14 @@
 # some external dependencies
+include_recipe "sudo"
 include_recipe "runit"
 include_recipe "java"
+include_recipe "tomcat"
 
 # setup up performance optimizations
 include_recipe "cassandra-priam::optimizations"
 
-# install tomcat
-package node[:tomcat][:packagename]
-
 # install JNA
-package "libjna-java"
+package node[:cassandra][:jnapackagename]
 
 # install cassandra server
 include_recipe "cassandra-priam::cassandra"

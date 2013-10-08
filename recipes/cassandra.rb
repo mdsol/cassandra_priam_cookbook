@@ -1,8 +1,8 @@
-# POSIX user
+# POSIX user - we create it under tomcat's gid for ease of restorate/backups.
 user "#{node[:cassandra][:user]}" do
   system    true
   home      node[:cassandra][:priam_cass_home]
-  gid       node[:tomcat][:user]
+  gid       node[:tomcat][:group]
   shell     "/bin/sh"
 end
 
@@ -14,7 +14,7 @@ end
 ].each do |dir|
   directory dir do
     owner     "#{node[:cassandra][:user]}"
-    group     "#{node[:tomcat][:user]}"
+    group     "#{node[:tomcat][:group]}"
     mode      0770
     recursive true
   end
@@ -35,7 +35,7 @@ VERSION_DIR = "#{node[:cassandra][:parentdir]}/#{node[:cassandra][:nameprefix]}-
 # create the target directory
 directory VERSION_DIR do
   owner     "#{node[:cassandra][:user]}"
-  group     "#{node[:tomcat][:user]}"
+  group     "#{node[:tomcat][:group]}"
   mode      0775
   recursive true
 end
@@ -45,7 +45,7 @@ execute "unpack #{local_archive}" do
   command   "tar --strip-components 1 --no-same-owner -xzf #{local_archive}"
   creates   "#{VERSION_DIR}/bin/cassandra"
   user      "#{node[:cassandra][:user]}"
-  group     "#{node[:tomcat][:user]}"
+  group     "#{node[:tomcat][:group]}"
   cwd       VERSION_DIR
 end
 
@@ -53,7 +53,7 @@ end
 link node[:cassandra][:priam_cass_home] do
   to        VERSION_DIR
   owner     "#{node[:cassandra][:user]}"
-  group     "#{node[:tomcat][:user]}"
+  group     "#{node[:tomcat][:group]}"
 end
 
 # link in Java Native interface, if found

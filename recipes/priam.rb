@@ -17,7 +17,7 @@ end
 # Give priam running as node[:tomcat][:user] access to write the Cassandra config
 file "#{node[:cassandra][:priam_cass_home]}/conf/cassandra.yaml" do
   owner     "#{node[:tomcat][:user]}"
-  group     "#{node[:tomcat][:user]}"
+  group     "#{node[:tomcat][:group]}"
   mode      "0755"
   action    :touch
 end
@@ -40,7 +40,7 @@ end
 # Priam's War file goes into tomcat's special directory - this event causes Priam to start running.
 # When Priam runs, it configures cassandra and starts it, either replacing a lost node or booting a new one.
 src_url = node[:cassandra][:priam_web_war][:src_url]
-local_archive = "#{node[:tomcat][:webappsroot]}/Priam.war"
+local_archive = "#{node[:tomcat][:webapp_dir]}/Priam.war"
 remote_file local_archive do
   source  src_url
   mode    0644
