@@ -60,9 +60,9 @@ Usage
 
 Include cassandra-priam in your unique role's runlist.
 
-# Minimum recommended deployment variables:
+### Minimum recommended deployment variables:
 
-## singleregion:
+#### singleregion:
 
 ```JSON
 "cassandra": {
@@ -70,7 +70,7 @@ Include cassandra-priam in your unique role's runlist.
 }
 ```
 
-## multiregion:
+#### multiregion:
 
 ```JSON
 "cassandra": {
@@ -80,9 +80,9 @@ Include cassandra-priam in your unique role's runlist.
 }
 ```
 
-# Other recommended settings:
+### Other recommended settings:
 
-## AWS Keys
+#### AWS Keys
 
 ```JSON
 "cassandra": {
@@ -94,7 +94,7 @@ Include cassandra-priam in your unique role's runlist.
 
 ```
 
-## Java
+#### Java
 
 ```JSON
 "java": {
@@ -106,16 +106,16 @@ Include cassandra-priam in your unique role's runlist.
 }
 ```
 
-# Putting It Together with Autoscaling Commands
+### Putting It Together with Autoscaling Commands
 
-## singleregion
+#### singleregion
 
 ```SHELL
 as-create-launch-config unique_cassandra_cluster_name-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
 as-create-auto-scaling-group unique_cassandra_cluster_name-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1c
 ```
 
-## multiregion
+#### multiregion
 
 ```SHELL
 as-create-launch-config unique_cassandra_cluster_name-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt 
