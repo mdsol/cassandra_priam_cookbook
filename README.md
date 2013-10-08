@@ -48,8 +48,8 @@ Recipes
 =======
 
 * `default.rb` : A dummy recipe pointing to install.rb
-* `install.rb` : Installs everything by calling the rest of the recipes in the right order. Includes a leadership election section for applying simpledbconfig.
-* `awscredentials.rb` : Creates AWS Credentials on the /etc filesystem.
+* `install.rb` : Installs everything by calling the rest of the recipes in the right order. Includes a leadership election section for applying simpledbconfig
+* `awscredentials.rb` : Creates AWS Credentials on the /etc filesystem
 * `cassandra.rb` : Installs Cassandra
 * `optimizations.rb` : Applies Optimizations to limits.d
 * `priam.rb` : Installs Priam
