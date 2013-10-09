@@ -25,7 +25,10 @@ leader = peers.sort{|a,b| a.name <=> b.name}.first || node # the "or" covers the
 Chef::Log.info("cassandra-priam LeaderElection: #{node[:roles].first} Leader is : #{leader.name} #{leader.ec2.public_hostname} #{leader.ipaddress}")
 
 if (node.name == leader.name)
-  # Apply the Priam/Cassandra configuration to Amazon SDB
+  # If we're the leader we always run this config
+  include_recipe "cassandra-priam::simpledbconfig"
+elsif (leader.uptime_seconds < 900)
+  # If the leader node has just started.. we apply the config any
   include_recipe "cassandra-priam::simpledbconfig"
 end
 
