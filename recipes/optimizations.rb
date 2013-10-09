@@ -23,4 +23,5 @@ end
 # http://kernel.org/doc/Documentation/sysctl/vm.txt
 file "/proc/sys/vm/max_map_count" do
   content "131072"
+  backup false
 end
