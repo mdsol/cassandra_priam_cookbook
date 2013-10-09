@@ -1,8 +1,21 @@
 ## SimpleDB Configuration Recipe
 
-package "build-essential"
-package "libxslt-dev"
-package "libxml2-dev"
+# Delayed installation of packages.
+buildessential = package "build-essential" do
+  action:nothing
+end
+
+xsltdev = package "libxslt-dev" do
+  action :nothing
+end
+
+xmldev = package "libxml2-dev" do
+  action :nothing
+end
+
+buildessential.run_action(:install)
+xsltdev.run_action(:install)
+xmldev.run_action(:install)
 
 chef_gem "fog" do
   version node[:cassandra][:fog][:version] 
