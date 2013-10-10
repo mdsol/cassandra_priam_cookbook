@@ -81,8 +81,8 @@ ruby_block "set-SimpleDB-Properties" do
     
     # unsafe attribute : present but empty on certain deployments this breaks them
 
-    # priam.multiregion.enable should only be created if it isn't false - otherwise, if there is a record present, priam will try to modify a security group unnecessarily
-    if node['cassandra']['priam_multiregion_enable'] != "false"
+    # priam.multiregion.enable should only be created if it is true - otherwise, if there is a record present, priam will try to modify a security group unnecessarily and we may not want that behaviour.
+    if node['cassandra']['priam_multiregion_enable'] == "true"
       sdb.put_attributes("PriamProperties", "#{node['cassandra']['priam_clustername']}.priam.multiregion.enable", {"appId" => "#{node['cassandra']['priam_clustername']}", "property" => "priam.multiregion.enable", "value" => "#{node['cassandra']['priam_multiregion_enable']}"}, options = { :replace => ["value"] })
     end
 

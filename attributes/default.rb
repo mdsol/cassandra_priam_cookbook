@@ -36,9 +36,6 @@ default[:cassandra][:fog][:version] = "1.9.0"
 # This package name may be different on untested distributions so we make it an attribute
 default[:cassandra][:jnapackagename] = "libjna-java"
 
-# By default the multiregion switch is disabled
-default[:cassandra][:multiregion] = "disabled"
-
 ###
 # Start of SimpleDB Config Attributes
 
@@ -50,15 +47,11 @@ default[:cassandra][:multiregion] = "disabled"
 # we will attempt to set this based on the role name, which should match the asg name. If your role does not match the name then this MUST be set.
 default[:cassandra][:priam_clustername] = "SET_ME_PLEASE"
 
-# we use this switch to set the two key multiregion variables at the default level
-case node[:cassandra][:multiregion] 
-when "enabled"
-  default[:cassandra][:priam_multiregion_enable] = "true"
-  default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
-else
-  default[:cassandra][:priam_multiregion_enable] = "false"
-  default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2Snitch"
-end
+# We won't set this if it isn't true  - set it to "true" to enable enable multiregion
+default[:cassandra][:priam_multiregion_enable] = nil
+
+# This is the default single-region snitch - set it to "org.apache.cassandra.locator.Ec2MultiRegionSnitch" for multiregion
+default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2Snitch"
 
 # This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
 # i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
