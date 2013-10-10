@@ -29,22 +29,26 @@ Contact Amazon to get your SimpleDB limits increased moderately with your usage.
 
 When creating a cluster, there are several places where the reference must be identical/matching for things to work as expected.
 
-These refernces should ideally all be the same and globally unique - although some are suffixed with identifiers, and some are not that global (security groups are regional).
+These references should ideally all be the same and globally unique - although some are suffixed with identifiers, and some are not that global (security groups are regional).
 
 Dashes are a used as a separator, so we try and use underscores where possible.
 
 Use the following as a guide / concept for your own naming:
 
-```` Autoscaling Group Name : unique_cassandra_cluster_one-useast1 ````
+Autoscaling Group Name : ````unique_cassandra_cluster_one-useast1````
+
 Note that we indicate the region the group is in at the end of the name with a dash separator. 
 
-```` Role Name :              unique-cassandra-cluster-one | unique_cassandra_cluster_one ````
+Role Name :              ````unique-cassandra-cluster-one | unique_cassandra_cluster_one````
+
 This must be unique within the chef API, shared between all members members of the cluster.
 
-```` Cluster Name :           unique_cassandra_cluster_one ````
+Cluster Name :           ````unique_cassandra_cluster_one````
+
 If a cluster name is not configured directly we will make one out of the role name, replacing dashes (-) with underscores (_)
 
-```` Security Group Name :    unique_cassandra_cluster_one ````
+Security Group Name :    ````unique_cassandra_cluster_one````
+
 Priam will attempt to configure these itself if it is in multiregion mode. They must match the ASG name and be created in each of the regions with the same name/descriptor despite having different IDs in each region.
 
 See the autoscaling commands at the bottom of this document for a clearer picture of some of the implications.
