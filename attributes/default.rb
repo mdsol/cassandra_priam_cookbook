@@ -82,7 +82,7 @@ default[:cassandra][:checksum] = "c731c8e2bc84769f884f423fb839ab3205279972b842ab
 # Priam Build Sources
 # If someone starts providing builds of Priam - this would be good.
 # Source files are in a Medidata-controlled S3 bucket with no authentication
-SRC = 'http://cloudteam-packages.s3.amazonaws.com/cassandra'
+SRC = 'http://dl.imedidata.net/cassandra'
 default[:cassandra][:priam_version] = "1.2.17"
 default[:cassandra][:priam_web_war][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-web-#{node['cassandra']['priam_version']}.war"
 default[:cassandra][:priam_web_war][:checksum] = "fbc1779f9cff9a8e3a4933000a9f2784c2037519f0e1f2777ae39dfee9d831a0"
