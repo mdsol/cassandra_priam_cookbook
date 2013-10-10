@@ -129,9 +129,6 @@ Development
 
 See the [Github page][7]
 
-Links
-=====
-
 [1]: https://github.com/Netflix/Priam
 [2]: http://planetcassandra.org
 [3]: http://aws.amazon.com/simpledb
@@ -143,8 +140,8 @@ Links
 [9]: http://community.opscode.com/cookbooks/tomcat
 [10]: https://rubygems.org/gems/fog
 
-License and Authors
-===================
+Authors
+=======
 
 * Author: Alex Trull <atrull@mdsol.com>
 * Author: Benton Roberts <broberts@mdsol.com>
