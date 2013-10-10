@@ -8,8 +8,17 @@ default[:tomcat][:base_version] = "7"
 # Various Install attributes
 
 # The following two variables is used for reading config from SimpleDB and for making Backups to S3 - the MUST be set for things to work
+# We will attempt to set them from a databag - the attributes of which are below
 default[:cassandra][:aws][:access_key_id] = nil
 default[:cassandra][:aws][:secret_access_key] = nil
+
+# AWS credentials databag
+# These variables stolen from the EBS cookbook https://raw.github.com/albertsj1/chef-ebs/master/attributes/default.rb
+default[:cassandra][:aws][:databag] = "credentials"
+default[:cassandra][:aws][:item] = "aws"
+default[:cassandra][:aws][:aki] = "aws_access_key_id"
+default[:cassandra][:aws][:sak] = "aws_secret_access_key"
+default[:cassandra][:aws][:encrypted] = true
 
 # We will create this user
 default[:cassandra][:user] = "cassandra"
@@ -27,8 +36,8 @@ default[:cassandra][:fog][:version] = "1.9.0"
 # This package name may be different on untested distributions so we make it an attribute
 default[:cassandra][:jnapackagename] = "libjna-java"
 
-# Multi region switch variable - switching to true or false sets priam variables - we default to single region i.e. false
-default[:cassandra][:multiregion] = "false"
+# By default the multiregion switch is disabled
+default[:cassandra][:multiregion] = "disabled"
 
 ###
 # Start of SimpleDB Config Attributes
@@ -41,7 +50,9 @@ default[:cassandra][:multiregion] = "false"
 # we will attempt to set this based on the role name, which should match the asg name. If your role does not match the name then this MUST be set.
 default[:cassandra][:priam_clustername] = "SET_ME_PLEASE"
 
-if node[:cassandra][:multiregion] =~ /true/
+# we use this switch to set the two key multiregion variables at the default level
+case node[:cassandra][:multiregion] 
+when "enabled"
   default[:cassandra][:priam_multiregion_enable] = "true"
   default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2MultiRegionSnitch"
 else
@@ -49,12 +60,12 @@ else
   default[:cassandra][:priam_endpoint_snitch] = "org.apache.cassandra.locator.Ec2Snitch"
 end
 
-# This must be set for all multiregion and any single region deployments outside the first three AZs/datacenters in a region
+# This must be set for all multiregion and any single region deployments outside the first three (abc) AZs/datacenters in a region
 # i.e. "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c" or "us-east-1c,us-east-1d"
 # If not set it will not be applied
 default[:cassandra][:priam_zones_available] = nil
 
-# If you want backups, set this variable to the name of an s3 bucket
+# If you want backups, set this variable to the name of an s3 bucket you have created.
 default[:cassandra][:priam_s3_bucket] = "SET_ME_PLEASE"
 
 # The rest - relatively self-explanatory variables, safe defaults for ec2 deployment where /mnt is a large block device.
