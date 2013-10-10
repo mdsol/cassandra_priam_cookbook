@@ -23,6 +23,8 @@ Contact Amazon to get your SimpleDB limits increased moderately with your usage.
 
 This cookbook will attempt to configure a cluster_name based on the unique role name.
 
+This cookbook tries to pick up AWS credentials from an encrypted databag by default in the same location as the ebs cookbook and others use (bag: credentials item: aws). See the attributes for more information.
+
 Requirements
 ============
 * Chef 10.16.4+
@@ -68,9 +70,6 @@ Include cassandra-priam in your unique role's runlist.
 {
   "cassandra": {
     "priam_s3_bucket": "YOURORG-cassandra-backups",
-    "aws": {
-      "access_key_id": "XXXX",
-      "secret_access_key": "YYYY"
     }
   },
   "java": {
@@ -92,10 +91,6 @@ Include cassandra-priam in your unique role's runlist.
     "priam_multiregion_enable": "true",
     "priam_endpoint_snitch": "org.apache.cassandra.locator.Ec2MultiRegionSnitch",
     "priam_zones_available": "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c",
-    "aws": {
-      "access_key_id": "XXXX",
-      "secret_access_key": "YYYY"
-    }
   },
   "java": {
       "install_flavor": "oracle",

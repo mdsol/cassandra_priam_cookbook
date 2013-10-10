@@ -7,15 +7,11 @@ default[:tomcat][:base_version] = "7"
 ###
 # Various Install attributes
 
-# The following two variables is used for reading config from SimpleDB and for making Backups to S3 - the MUST be set for things to work
-# We will attempt to set them from a databag - the attributes of which are below
-default[:cassandra][:aws][:access_key_id] = nil
-default[:cassandra][:aws][:secret_access_key] = nil
-
-# AWS credentials databag
+# We will attempt to get AWS credentials from a databag - the attributes of which are below
 # These variables stolen from the EBS cookbook https://raw.github.com/albertsj1/chef-ebs/master/attributes/default.rb
 default[:cassandra][:aws][:databag] = "credentials"
 default[:cassandra][:aws][:item] = "aws"
+# IDs inside the item to use
 default[:cassandra][:aws][:aki] = "aws_access_key_id"
 default[:cassandra][:aws][:sak] = "aws_secret_access_key"
 default[:cassandra][:aws][:encrypted] = true

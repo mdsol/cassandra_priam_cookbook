@@ -57,9 +57,11 @@ ruby_block "set-SimpleDB-Properties" do
   block do
     require 'fog'
 
+    # We read the credentials from the same place that Priam will.
     keys = Hash[File.read("/etc/awscredential.properties").split.map{|e| e.split("=") }]
     sdb = Fog::AWS::SimpleDB.new(:aws_access_key_id => keys["AWSACCESSID"], :aws_secret_access_key => keys["AWSKEY"])
 
+    # We create databases if they have not already been - this is safe behaviour.
     sdb.create_domain("InstanceIdentity")
     sdb.create_domain("PriamProperties")
 

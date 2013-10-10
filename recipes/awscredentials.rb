@@ -17,15 +17,27 @@
 # limitations under the License.
 #
 
-# AWS credentials for Priam
+# Get credentials
+# Taken from the ebs cookbook - kudos to them
+if node[:cassandra][:aws][:encrypted]
+  credentials = Chef::EncryptedDataBagItem.load(node[:cassandra][:aws][:databag], node[:cassandra][:aws][:item])
+else
+  credentials = data_bag_item node[:cassandra][:aws][:databag], node[:cassandra][:aws][:item]
+end
+
+# We pick up the defined items.
+aws_access_key = credentials[node.cassandra.aws.aki]
+aws_secret_access_key = credentials[node.cassandra.aws.sak]
+
+# And then create the AWS credentials for Priam
 template "/etc/awscredential.properties" do
   source "awscredential.properties.erb"
   owner     "#{node[:tomcat][:user]}"
   group     "#{node[:tomcat][:group]}"
   mode      "0640"
   variables ({
-    :access_key_id => node[:cassandra][:aws][:access_key_id],
-    :secret_access_key => node[:cassandra][:aws][:secret_access_key]
+    :access_key_id => aws_access_key,
+    :secret_access_key => aws_secret_access_key
   })
 end
 
