@@ -9,19 +9,42 @@ Priam is a sidecar application that takes care of Cassandra Configuration, Start
 
 This cookbook installs the [JNA][5] package.
 
-Special Caveats:
+### Special Caveats:
 
 This cookbook and the software it deploys are only designed to work under AWS EC2 with [Autoscaling][6] and [SimpleDB][3].
 
 You should check that the credentials you provide have the necessary accesss to use the relevant AWS services.
 
-General Caveats:
+### General Caveats:
+
+#### Java:
 
 The software this cookbook installs has mostly been tested with the Oracle JRE - your mileage may very on other JRE builds. 
 
+#### SimpleDB:
+
 Contact Amazon to get your SimpleDB limits increased moderately with your usage.
 
-This cookbook will attempt to configure a cluster_name based on the unique role name.
+#### Cluster, Role and Autoscaling Group Naming
+
+When creating a cluster, there are several places where the reference must be identical/matching for things to work as expected.
+
+These refernces should ideally all be the same and globally unique - although some are suffixed with identifiers, and some are not that global (security groups are regional).
+
+Dashes are a used as a separator, so we try and use underscores where possible.
+
+Use the following as a guide / concept for your own naming:
+
+````
+Autoscaling Group Name : unique_cassandra_cluster_one-useast1 # Note that we indicate the region the group is in at the end of the name with a dash separator. 
+Role Name :              unique-cassandra-cluster-one | unique_cassandra_cluster_one # This must be unique within the chef API, shared between all members members of the cluster.
+Cluster Name :           unique_cassandra_cluster_one # If a cluster name is not configured directly we will make one out of the role name, replacing dashes (-) with underscores (_)
+Security Group Name :    unique_cassandra_cluster_one # Priam will attempt to configure these itself if it is in multiregion mode. They must match the ASG name and be created in each of the regions with the same name/descriptor despite having different IDs in each region.
+````
+
+See the autoscaling commands at the bottom of this document for a clearer picture of some of the implications.
+
+#### AWS Credentials:
 
 This cookbook tries to pick up AWS credentials from an encrypted databag by default in the same location as the ebs cookbook and others use (bag: credentials item: aws). See the attributes for more information.
 
@@ -71,7 +94,7 @@ Include cassandra-priam in your unique role's runlist.
   "cassandra": {
     "priam_s3_bucket": "YOURORG-cassandra-backups",
     }
-  },
+  }
   "java": {
     "install_flavor": "oracle",
     "jdk_version": "7",
@@ -107,17 +130,17 @@ Include cassandra-priam in your unique role's runlist.
 #### singleregion
 
 ```SHELL
-as-create-launch-config unique_cassandra_cluster_name-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
-as-create-auto-scaling-group unique_cassandra_cluster_name-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1c
+as-create-launch-config unique_cassandra_cluster_one-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
+as-create-auto-scaling-group unique_cassandra_cluster_one-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1c
 ```
 
 #### multiregion
 
 ```SHELL
-as-create-launch-config unique_cassandra_cluster_name-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt 
-as-create-launch-config unique_cassandra_cluster_name-uswest1 --region us-west-1 --image-id ami-acf9cde9 --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
-as-create-auto-scaling-group unique_cassandra_cluster_name-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 24 --min-size 12 --availability-zones us-east-1a,us-east-1c
-as-create-auto-scaling-group unique_cassandra_cluster_name-uswest1 --region us-west-1 --launch-configuration unique_cassandra_cluster_name-uswest1 --max-size 24 --min-size 12 --availability-zones us-west-1a,us-west-1b,us-west-1c
+as-create-launch-config unique_cassandra_cluster_two-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt 
+as-create-launch-config unique_cassandra_cluster_two-uswest1 --region us-west-1 --image-id ami-acf9cde9 --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
+as-create-auto-scaling-group unique_cassandra_cluster_two-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1c
+as-create-auto-scaling-group unique_cassandra_cluster_two-uswest1 --region us-west-1 --launch-configuration unique_cassandra_cluster_name-uswest1 --max-size 4 --min-size 2 --availability-zones us-west-1a,us-west-1b,us-west-1c
 ```
 
 Development
