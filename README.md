@@ -60,49 +60,50 @@ Usage
 
 Include cassandra-priam in your unique role's runlist.
 
-### Minimum recommended deployment variables:
+### Recommended deployment variables:
 
 #### singleregion:
 
 ```JSON
-"cassandra": {
-  "priam_s3_bucket": "YOURORG-cassandra-backups"
+{
+  "cassandra": {
+    "priam_s3_bucket": "YOURORG-cassandra-backups",
+    "aws": {
+      "access_key_id": "XXXX",
+      "secret_access_key": "YYYY"
+    }
+  },
+  "java": {
+    "install_flavor": "oracle",
+    "jdk_version": "7",
+    "oracle": {
+      "accept_oracle_download_terms": "true"
+    }
+  }
 }
 ```
 
 #### multiregion:
 
 ```JSON
-"cassandra": {
-  "priam_s3_bucket": "YOURORG-cassandra-backups",
-  "multiregion": "true",
-  "priam_zones_available": "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c"
-}
-```
-
-### Other recommended settings:
-
-#### AWS Keys
-
-```JSON
-"cassandra": {
-  "aws": {
-      "access_key_id": "YOURKEYID",
-      "secret_access_key": "YOURACCESSKEY"
-  }
-}
-
-```
-
-#### Java
-
-```JSON
-"java": {
-  "install_flavor": "oracle",
-  "jdk_version": "7",
-  "oracle" : {
-    "accept_oracle_download_terms": "true"
-  }
+{
+  "cassandra": {
+    "priam_s3_bucket": "YOURORG-cassandra-backups",
+    "priam_multiregion_enable": "true",
+    "priam_endpoint_snitch": "org.apache.cassandra.locator.Ec2MultiRegionSnitch",
+    "priam_zones_available": "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c",
+    "aws": {
+      "access_key_id": "XXXX",
+      "secret_access_key": "YYYY"
+    }
+  },
+  "java": {
+      "install_flavor": "oracle",
+      "jdk_version": "7",
+      "oracle" : {
+        "accept_oracle_download_terms": "true"
+      }
+   }
 }
 ```
 
