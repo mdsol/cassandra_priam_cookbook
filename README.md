@@ -102,7 +102,6 @@ Include cassandra-priam in your unique role's runlist.
 {
   "cassandra": {
     "priam_s3_bucket": "YOURORG-cassandra-backups",
-    }
   },
   "java": {
     "install_flavor": "oracle",
