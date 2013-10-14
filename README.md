@@ -19,7 +19,7 @@ You should check that the credentials you provide have the necessary accesss to 
 
 #### Java:
 
-The software this cookbook installs has mostly been tested with the Oracle JRE - your mileage may very on other JRE builds. 
+The software this cookbook installs has mostly been tested with the Oracle JRE - your mileage may vary on other JRE builds. 
 
 #### SimpleDB:
 
@@ -49,9 +49,9 @@ If a cluster name is not configured directly we will make one out of the role na
 
 Security Group Name :    ````unique_cassandra_cluster_one````
 
-Priam will attempt to configure these itself if it is in multiregion mode. They must match the ASG name and be created in each of the regions with the same name/descriptor despite having different IDs in each region.
+Priam will attempt to configure security groups itself in each region if it is in multiregion mode. It will not however create them : They should be created matching the cluster name (i.e. the ASG name before the region suffix).
 
-See the autoscaling commands at the bottom of this document for a clearer picture of some of the implications.
+See the ec2/autoscaling commands at the bottom of this document for a clearer picture of some of the implications.
 
 #### AWS Credentials:
 
@@ -69,7 +69,7 @@ Requirements
 ## Platform
 
 * Ubuntu 12.04+ [tested heavily]
-* Probably other Linux Distros with some tweaking. 
+* Probably other Linux Distros with some tweaking of package names where appropriate. 
 
 Note: This cookbook does not call any package managers directly but rather through the chef package resource, but package names and installation paths may differ.
 
@@ -138,17 +138,19 @@ Include cassandra-priam in your unique role's runlist.
 #### singleregion
 
 ```SHELL
-as-create-launch-config unique_cassandra_cluster_one-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
-as-create-auto-scaling-group unique_cassandra_cluster_one-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1c
+as-create-launch-config unique_cassandra_cluster_one-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique-cassandra-cluster-name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
+as-create-auto-scaling-group unique_cassandra_cluster_one-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1b,us-east-1c
 ```
 
 #### multiregion
 
 ```SHELL
-as-create-launch-config unique_cassandra_cluster_two-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt 
-as-create-launch-config unique_cassandra_cluster_two-uswest1 --region us-west-1 --image-id ami-acf9cde9 --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_name --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
-as-create-auto-scaling-group unique_cassandra_cluster_two-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_name-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1c
-as-create-auto-scaling-group unique_cassandra_cluster_two-uswest1 --region us-west-1 --launch-configuration unique_cassandra_cluster_name-uswest1 --max-size 4 --min-size 2 --availability-zones us-west-1a,us-west-1b,us-west-1c
+ec2-create-group --region us-east-1 unique_cassandra_cluster_two -d unique_cassandra_cluster_two
+ec2-create-group --region us-west-1 unique_cassandra_cluster_two -d unique_cassandra_cluster_two
+as-create-launch-config unique_cassandra_cluster_two-useast1 --region us-east-1 --image-id ami-a73264ce --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_two --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt 
+as-create-launch-config unique_cassandra_cluster_two-uswest1 --region us-west-1 --image-id ami-acf9cde9 --instance-type m1.small --monitoring-disabled --group unique_cassandra_cluster_two --key aws_ssh_keypair_id --user-data-file chefregistrationetc.txt
+as-create-auto-scaling-group unique_cassandra_cluster_two-useast1 --region us-east-1 --launch-configuration unique_cassandra_cluster_two-useast1 --max-size 4 --min-size 2 --availability-zones us-east-1a,us-east-1b,us-east-1c
+as-create-auto-scaling-group unique_cassandra_cluster_two-uswest1 --region us-west-1 --launch-configuration unique_cassandra_cluster_two-uswest1 --max-size 4 --min-size 2 --availability-zones us-west-1a,us-west-1b,us-west-1c
 ```
 
 Development
