@@ -121,7 +121,7 @@ Include cassandra-priam in your unique role's runlist.
     "priam_s3_bucket": "YOURORG-cassandra-backups",
     "priam_multiregion_enable": "true",
     "priam_endpoint_snitch": "org.apache.cassandra.locator.Ec2MultiRegionSnitch",
-    "priam_zones_available": "us-east-1a,us-east-1c,us-west-1a,us-west-1b,us-west-1c",
+    "priam_zones_available": "us-east-1a,us-east-1b,us-east-1c,us-west-1a,us-west-1b,us-west-1c",
   },
   "java": {
       "install_flavor": "oracle",
