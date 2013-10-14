@@ -1,10 +1,4 @@
 ###
-# External Attributes
-
-# Sensible defaults for Ubuntu - these are needed by Priam
-default[:tomcat][:base_version] = "7"
-
-###
 # Various Install attributes
 
 # We will attempt to get AWS credentials from a databag - the attributes of which are below
