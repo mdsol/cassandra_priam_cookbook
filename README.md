@@ -96,12 +96,17 @@ Include cassandra-priam in your unique role's runlist.
 
 ### Recommended deployment variables:
 
+The following example variables should be in the unique role's "overrides" attributes section:
+
 #### singleregion:
 
 ```JSON
 {
   "cassandra": {
     "priam_s3_bucket": "YOURORG-cassandra-backups",
+  },
+  "tomcat":{
+     "base_version": "7"
   },
   "java": {
     "install_flavor": "oracle",
@@ -122,6 +127,9 @@ Include cassandra-priam in your unique role's runlist.
     "priam_multiregion_enable": "true",
     "priam_endpoint_snitch": "org.apache.cassandra.locator.Ec2MultiRegionSnitch",
     "priam_zones_available": "us-east-1a,us-east-1b,us-east-1c,us-west-1a,us-west-1b,us-west-1c",
+  },
+  "tomcat":{
+     "base_version": "7"
   },
   "java": {
       "install_flavor": "oracle",
