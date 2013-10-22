@@ -7,6 +7,8 @@ This cookbook elects a leader to create the necessary [SimpleDB][3] databases/co
 
 Priam is a sidecar application that takes care of Cassandra Configuration, Startup, Seeding and Node Replacement, Backups (to s3) and Restoration (from s3). It makes the lifecycle of Cassandra clusters much easier to manage.
 
+Some scripts have been included if you want to interrogate/configure simpledb directly - see the `examples/scripts/simpledb` directory.
+
 This cookbook installs the [JNA][5] package.
 
 ### Special Caveats:
