@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cassandra-priam
-# Recipe:: optimizations 
+# Recipe:: optimizations
 #
 # Copyright 2013 Medidata Solutions Worldwide
 #
@@ -45,7 +45,8 @@ end
 
 # increase the maximum number of memory map areas a process may have
 # http://kernel.org/doc/Documentation/sysctl/vm.txt
-file "/proc/sys/vm/max_map_count" do
-  content "131072"
-  backup false
+execute "Increase the maximum number of memory map areas" do
+  max_vms = 131072
+  command "echo #{max_vms}  > /proc/sys/vm/max_map_count"
+  not_if {File.read('/proc/sys/vm/max_map_count').to_i >= max_vms}
 end
