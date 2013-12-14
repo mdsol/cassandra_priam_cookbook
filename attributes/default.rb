@@ -1,4 +1,25 @@
 ###
+# Software Source Attributes
+
+# For Datastax Cassandra the prefix is "dsc-"
+default[:cassandra][:nameprefix] = "dsc-cassandra"
+
+# Where to get Cassandra from: Directly from Datastax
+default[:cassandra][:version] = "1.2.10"
+default[:cassandra][:src_url] = "http://downloads.datastax.com/community/#{node[:cassandra][:nameprefix]}-#{node['cassandra']['version']}-bin.tar.gz"
+default[:cassandra][:checksum] = "c731c8e2bc84769f884f423fb839ab3205279972b842ab37fdace49ef511e544"
+
+# Priam Build Sources
+# You can get builds directly from maven.org : http://search.maven.org/ search for "com.netflix.priam"
+# By default files are in a Medidata-controlled S3 bucket with no authentication, because at the time of writing there are no Priam 1.2 builds available at the maven.org site.
+SRC = 'http://dl.imedidata.net/cassandra'
+default[:cassandra][:priam_version] = "1.2.17"
+default[:cassandra][:priam_web_war][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-web-#{node['cassandra']['priam_version']}.war"
+default[:cassandra][:priam_web_war][:checksum] = "fbc1779f9cff9a8e3a4933000a9f2784c2037519f0e1f2777ae39dfee9d831a0"
+default[:cassandra][:priam_cass_extensions_jar][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-cass-extensions-#{node['cassandra']['priam_version']}.jar"
+default[:cassandra][:priam_cass_extensions_jar][:checksum] = "f5cbee81dd885d07c5e3aff9b45de5a8cf9674eecc4a8af0bcd736a9c86afdab"
+
+###
 # Various Install attributes
 
 # We will attempt to get AWS credentials from a databag - the attributes of which are below
@@ -13,9 +34,6 @@ default[:cassandra][:aws][:encrypted] = true
 # We will create this user
 default[:cassandra][:user] = "cassandra"
 default[:cassandra][:log_dir] = "/var/log/cassandra"
-
-# Datastax's build of cassandra comes prefixed dsc-cassandra - modify as necessary for your needs
-default[:cassandra][:nameprefix] = "dsc-cassandra"
 
 # We will try to install all software to this path
 default[:cassandra][:parentdir] = "/opt"
@@ -60,22 +78,4 @@ default[:cassandra][:priam_commitlog_location] = "/mnt/cassandra/commitlog"
 default[:cassandra][:priam_cass_startscript] = "/etc/init.d/cassandra start"
 default[:cassandra][:priam_cass_stopscript] = "/etc/init.d/cassandra stop"
 default[:cassandra][:priam_upload_throttle] = "5"
-
-###
-# Where to get the software..
-
-# Where to get Cassandra from: Directly from Datastax
-default[:cassandra][:version] = "1.2.10"
-default[:cassandra][:src_url] = "http://downloads.datastax.com/community/#{node['cassandra']['nameprefix']}-#{node['cassandra']['version']}-bin.tar.gz"
-default[:cassandra][:checksum] = "c731c8e2bc84769f884f423fb839ab3205279972b842ab37fdace49ef511e544"
-
-# Priam Build Sources
-# If someone starts providing builds of Priam - this would be good.
-# Source files are in a Medidata-controlled S3 bucket with no authentication
-SRC = 'http://dl.imedidata.net/cassandra'
-default[:cassandra][:priam_version] = "1.2.17"
-default[:cassandra][:priam_web_war][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-web-#{node['cassandra']['priam_version']}.war"
-default[:cassandra][:priam_web_war][:checksum] = "fbc1779f9cff9a8e3a4933000a9f2784c2037519f0e1f2777ae39dfee9d831a0"
-default[:cassandra][:priam_cass_extensions_jar][:src_url] = "#{SRC}/priam/#{node['cassandra']['priam_version']}/priam-cass-extensions-#{node['cassandra']['priam_version']}.jar"
-default[:cassandra][:priam_cass_extensions_jar][:checksum] = "f5cbee81dd885d07c5e3aff9b45de5a8cf9674eecc4a8af0bcd736a9c86afdab"
 

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cassandra-priam
-# Recipe:: optimizations 
+# Recipe:: optimizations
 #
 # Copyright 2013 Medidata Solutions Worldwide
 #
@@ -17,7 +17,8 @@
 # limitations under the License.
 #
 
-# cassandra performance optimizations, based on Datastax best practices
+# cassandra performance optimizations, based on Datastax best practices:
+# http://www.datastax.com/documentation/cassandra/2.0/webhelp/index.html#cassandra/install/installRecommendSettings.html
 
 # allow cassandra more memory and more open filehandles
 file "/etc/security/limits.d/cassandra.conf" do
@@ -31,16 +32,21 @@ root hard as unlimited
 #{node[:cassandra][:user]} hard memlock unlimited
 root soft memlock unlimited
 root hard memlock unlimited
-#{node[:cassandra][:user]} soft nofile 32768
-#{node[:cassandra][:user]} hard nofile 32768
-root soft nofile 32768
-root hard nofile 32768
+#{node[:cassandra][:user]} soft nofile 100000
+#{node[:cassandra][:user]} hard nofile 100000
+root soft nofile 100000
+root hard nofile 100000
+#{node[:cassandra][:user]} soft nproc 32768
+#{node[:cassandra][:user]} hard nproc 32768
+root soft nproc 32768
+root hard nproc 32768
 EOF
 end
 
 # increase the maximum number of memory map areas a process may have
 # http://kernel.org/doc/Documentation/sysctl/vm.txt
-file "/proc/sys/vm/max_map_count" do
-  content "131072"
-  backup false
+execute "Increase the maximum number of memory map areas" do
+  max_vms = 131072
+  command "echo #{max_vms}  > /proc/sys/vm/max_map_count"
+  not_if {File.read('/proc/sys/vm/max_map_count').to_i >= max_vms}
 end
